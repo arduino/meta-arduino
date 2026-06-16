@@ -22,7 +22,5 @@ CORE_IMAGE_EXTRA_INSTALL:append = " \
 
 CORE_IMAGE_EXTRA_INSTALL:append:monza = " libqcnpuperf"
 
-CORE_IMAGE_EXTRA_INSTALL:append = " arduino-router"
-
 # QCOM targets always use Wayland; guard against incomplete distro configs.
 REQUIRED_DISTRO_FEATURES += "wayland"
