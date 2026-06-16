@@ -1,0 +1,20 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/siemens/kas/master/kas/schema-kas.json
+
+header:
+  version: 14
+  includes:
+    - repo: meta-qcom-3rdparty
+      file: ci/qcom-distro.yml
+
+repos:
+  meta-qcom-3rdparty:
+    url: https://github.com/ricardosalveti/meta-qcom-3rdparty.git
+
+  # meta-arduino is a multi-layer repo; no url = current checkout
+  meta-arduino:
+    layers:
+      meta-arduino-common:
+      meta-arduino-qcom:
+
+target:
+  - arduino-docker-image

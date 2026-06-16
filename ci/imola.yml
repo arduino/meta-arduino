@@ -1,0 +1,14 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/siemens/kas/master/kas/schema-kas.json
+
+header:
+  version: 14
+  includes:
+    - ci/base.yml
+    - ci/ci.yml
+
+repos:
+  meta-qcom-3rdparty:
+    branch: fw
+    commit: 4d6b67c3406a5296f65e9223b090503197bb1de2
+
+machine: imola
