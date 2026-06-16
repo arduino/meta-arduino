@@ -5,17 +5,12 @@ multimedia packages (VPU and GPU) when available."
 
 LICENSE = "MIT"
 
-require recipes-support/images/arduino-weston-image.bb
+require recipes-support/images/arduino-multimedia-image.bb
 
 # Docker packages
 CORE_IMAGE_EXTRA_INSTALL += " \
     docker \
     docker-compose \
-"
-
-# Arduino m4-proxy
-CORE_IMAGE_EXTRA_INSTALL += " \
-    m4-proxy \
 "
 
 EXTRA_USERS_PARAMS += "\
