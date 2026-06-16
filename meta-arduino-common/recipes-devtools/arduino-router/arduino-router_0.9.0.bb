@@ -29,6 +29,7 @@ DEBIAN_DIR = "${S}/debian/arduino-router"
 
 SYSTEMD_SERVICE:${PN} = " \
     arduino-router.service \
+    arduino-router-serial.service \
     arduino-router-serial.path \
 "
 
