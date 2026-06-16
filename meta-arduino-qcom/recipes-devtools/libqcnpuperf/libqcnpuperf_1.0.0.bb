@@ -10,7 +10,7 @@ LIC_FILES_CHKSUM = "file://LICENSE.txt;md5=223037c4be0bfc6cf757035432adf983"
 
 DEPENDS = "fastrpc"
 
-SRC_URI = "git://github.com/qualcomm/libqcnpuperf;protocol=https;nobranch=1;tag=${PV}"
+SRC_URI = "git://github.com/qualcomm/libqcnpuperf;protocol=https;nobranch=1"
 SRCREV = "b2ec245d3b0d98cdb3df75f22ba7209e461c8099"
 
 S = "${UNPACKDIR}/git"
