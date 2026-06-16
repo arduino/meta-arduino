@@ -11,8 +11,6 @@ PV = "0.9.0"
 SRC_URI = "git://github.com/arduino/arduino-router.git;protocol=https;nobranch=1"
 SRCREV = "e25c513d74a0105c020b677a1c9b8228618fb586"
 
-S = "${UNPACKDIR}/git"
-
 inherit go systemd
 
 do_compile() {
@@ -33,6 +31,7 @@ SYSTEMD_SERVICE:${PN} = " \
     arduino-router.service \
     arduino-router-serial.path \
 "
+
 SYSTEMD_AUTO_ENABLE = "disable"
 
 do_install() {
