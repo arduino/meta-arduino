@@ -17,9 +17,10 @@ CORE_IMAGE_EXTRA_INSTALL:append = " \
     qcom-adreno \
     qcom-sensors-binaries \
     qwes \
-    libqcnpuperf \
     ${@bb.utils.contains('BBFILE_COLLECTIONS', 'meta-audioreach', 'packagegroup-audioreach', '', d)} \
 "
+
+CORE_IMAGE_EXTRA_INSTALL:append:monza = " libqcnpuperf"
 
 # QCOM targets always use Wayland; guard against incomplete distro configs.
 REQUIRED_DISTRO_FEATURES += "wayland"
