@@ -1,5 +1,5 @@
 MACHINE ??= "imola"
-DISTRO ?= "poky-altcfg"
+DISTRO ?= "qcom-distro"
 USER_CLASSES ?= "buildstats"
 PATCHRESOLVE = "noop"
 
