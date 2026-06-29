@@ -1,5 +1,5 @@
 SUMMARY = "Install Arduino firmware binaries for the target"
-LICENSE = "MIT"
+LICENSE = "Apache-2.0 & LGPL-2.1-or-later"
 
 inherit arduino-core
 
