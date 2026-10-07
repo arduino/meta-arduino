@@ -39,7 +39,7 @@ env:
 jobs:
   kas-setup:
     if: github.repository_owner == 'arduino'
-    runs-on: [self-hosted, qcom-u2404, amd64]
+    runs-on: ["self-hosted", "arduino-prd-u2404-amd64-large-od-ephem"]
     steps:
       - uses: actions/checkout@v6
         with:
