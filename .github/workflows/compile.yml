@@ -75,13 +75,6 @@ jobs:
         run: |
           chmod +x $KAS_CONTAINER
 
-      - name: Ensure cache directory permissions
-        shell: bash
-        run: |
-          if [ -d /efs ]; then
-            docker run --rm -v /efs:/efs alpine sh -c "mkdir -p /efs/qli/meta-arduino && chmod -R 777 /efs/qli"
-          fi
-
       - name: Setup build variables
         shell: bash
         run: |
