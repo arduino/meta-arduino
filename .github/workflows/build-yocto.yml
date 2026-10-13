@@ -61,7 +61,8 @@ jobs:
 
       - name: Run kas lock
         run: |
-          ${KAS_CONTAINER} lock ci/imola.yml ci/monza.yml
+          ${KAS_CONTAINER} lock ci/imola.yml
+          ${KAS_CONTAINER} lock ci/monza.yml
 
       - name: Upload kas
         uses: actions/upload-artifact@v6
