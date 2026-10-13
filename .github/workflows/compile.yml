@@ -122,9 +122,11 @@ jobs:
         if:  inputs.world
         shell: bash
         run: |
-          ci/kas-container-shell-helper.sh ci/yocto-buildstats.sh
-          rename.ul -va buildstats buildstats-world $KAS_WORK_DIR/build/buildstats*
-          mv $KAS_WORK_DIR/build/buildstats* .
+          if [ -f ci/kas-container-shell-helper.sh ] && [ -f ci/yocto-buildstats.sh ]; then
+            ci/kas-container-shell-helper.sh ci/yocto-buildstats.sh
+            rename.ul -va buildstats buildstats-world $KAS_WORK_DIR/build/buildstats* || true
+            mv $KAS_WORK_DIR/build/buildstats* . || true
+          fi
 
       - name: Kas build images
         if:  inputs.target
@@ -139,8 +141,10 @@ jobs:
         if:  inputs.target
         shell: bash
         run: |
-          ci/kas-container-shell-helper.sh ci/yocto-buildstats.sh
-          mv $KAS_WORK_DIR/build/buildstats* .
+          if [ -f ci/kas-container-shell-helper.sh ] && [ -f ci/yocto-buildstats.sh ]; then
+            ci/kas-container-shell-helper.sh ci/yocto-buildstats.sh
+            mv $KAS_WORK_DIR/build/buildstats* . || true
+          fi
 
       - name: Kas build SDK
         if:  inputs.sdk
@@ -154,9 +158,11 @@ jobs:
         if:  inputs.sdk
         shell: bash
         run: |
-          ci/kas-container-shell-helper.sh ci/yocto-buildstats.sh
-          rename.ul -av buildstats buildstats-sdk $KAS_WORK_DIR/build/buildstats*
-          mv $KAS_WORK_DIR/build/buildstats* .
+          if [ -f ci/kas-container-shell-helper.sh ] && [ -f ci/yocto-buildstats.sh ]; then
+            ci/kas-container-shell-helper.sh ci/yocto-buildstats.sh
+            rename.ul -av buildstats buildstats-sdk $KAS_WORK_DIR/build/buildstats* || true
+            mv $KAS_WORK_DIR/build/buildstats* . || true
+          fi
 
       - name: Stage build artifacts for publishing
         shell: bash
@@ -194,7 +200,10 @@ jobs:
             # Copy *.efi, *.efi and *.vfat as they are useful for debugging
             find $images_dir/ -maxdepth 1 -type f \( -name \*.efi -o -name \*.elf -o -name dtb-\*.vfat \) -exec cp -v {} $uploads_dir/ \;
           fi
-          cp -v buildstats* kas-build.yml $uploads_dir/
+          if compgen -G "buildstats*" > /dev/null; then
+            cp -v buildstats* $uploads_dir/
+          fi
+          cp -v kas-build.yml $uploads_dir/
           if [ -d $sdk_dir ]; then
             cp -v $sdk_dir/* $uploads_dir/
           fi
