@@ -199,7 +199,7 @@ jobs:
           - type: default
             dirname: ""
             yamlfile: ""
-    uses: qualcomm-linux/meta-qcom/.github/workflows/compile.yml@master
+    uses: ./.github/workflows/compile.yml
     with:
       name: ${{ matrix.machine }}
       enabled: true
