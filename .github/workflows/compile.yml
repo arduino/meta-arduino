@@ -223,7 +223,7 @@ jobs:
         with:
           path: ./uploads
           destination: ${{ github.repository_owner }}/${{ github.event.repository.name }}/${{ github.run_id }}-${{ github.run_attempt }}/
-          s3_bucket: qcom-prd-gh-artifacts
+          s3_bucket: gli-prd-arduino-gh-artifacts
           object_tag: ${{ env.OBJECT_TAG }}
           build_type: ${{ env.BUILD_TYPE }}
           build_branch: "branch=${{ github.base_ref || github.ref_name }}"
