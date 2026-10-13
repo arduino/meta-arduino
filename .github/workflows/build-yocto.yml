@@ -33,7 +33,7 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  CACHE_DIR: /efsx/qli/meta-qcom
+  CACHE_DIR: /efs/qli/meta-arduino
   KAS_CLONE_DEPTH: 1
 
 jobs:
