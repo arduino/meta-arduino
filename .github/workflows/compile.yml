@@ -313,3 +313,27 @@ jobs:
           name: ${{ steps.print-output.outputs.filename }}
           path: ${{ steps.print-output.outputs.filename }}
 
+      - name: Archive BitBake task logs
+        if: always()
+        shell: bash
+        run: |
+          mkdir -p /tmp/bitbake-logs
+          ARCHIVE_PATH="/tmp/bitbake-logs/bitbake-task-logs-${{ inputs.machine }}.tar.gz"
+          WORK_DIR="${KAS_WORK_DIR}/build/tmp/work"
+          if [ -d "${WORK_DIR}" ]; then
+            echo "Collecting and compressing BitBake task logs..."
+            find "${WORK_DIR}" -type f \( -name "log.do_*" -o -name "run.do_*" \) -print0 2>/dev/null | \
+              tar -czf "${ARCHIVE_PATH}" --null -T - 2>/dev/null || true
+            if [ -f "${ARCHIVE_PATH}" ]; then
+              echo "Task logs archived successfully: $(du -h "${ARCHIVE_PATH}" | awk '{print $1}')"
+            fi
+          fi
+
+      - name: Upload BitBake task logs artifact
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: bitbake-logs-${{ inputs.machine }}
+          if-no-files-found: ignore
+          path: /tmp/bitbake-logs/bitbake-task-logs-${{ inputs.machine }}.tar.gz
+
