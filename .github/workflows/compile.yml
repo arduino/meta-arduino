@@ -59,6 +59,12 @@ jobs:
         with:
           persist-credentials: false
 
+      - name: Symlink CI directory if needed
+        run: |
+          if [ ! -d ci ] && [ -d meta-arduino-qcom/ci ]; then
+            ln -s meta-arduino-qcom/ci ci
+          fi
+
       - name: Download kas
         uses: actions/download-artifact@v7
         with:
