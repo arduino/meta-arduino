@@ -98,7 +98,6 @@ jobs:
           local_conf_header:
             build-id: |
               BUILD_ID = "${BUILD_ID}"
-              BB_HEARTBEAT_EVENT = "60"
           EOF
         env:
           INPUTS_CACHE_DIR: ${{inputs.cache_dir}}
