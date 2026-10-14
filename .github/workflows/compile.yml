@@ -135,56 +135,7 @@ jobs:
           if [ -c /dev/kvm ]; then
             KAS_CONTAINER="$KAS_CONTAINER --kvm"
           fi
-
-          BUILD_LOG="/tmp/kas-build-${INPUTS_MACHINE}.log"
-          HEARTBEAT_SECONDS=60
-
-          echo "Starting kas build for ${INPUTS_MACHINE}..."
-          echo "Logging full build output to ${BUILD_LOG}"
-
-          set +e
-          $KAS_CONTAINER build ${KAS_YAMLS} > "${BUILD_LOG}" 2>&1 &
-          build_pid=$!
-          set -e
-
-          start_epoch=$(date +%s)
-          last_task_line=""
-
-          while kill -0 "${build_pid}" 2>/dev/null; do
-            sleep "${HEARTBEAT_SECONDS}"
-            now_epoch=$(date +%s)
-            elapsed=$((now_epoch - start_epoch))
-            log_size=$(du -h "${BUILD_LOG}" 2>/dev/null | awk '{print $1}')
-
-            task_line=$(grep -E 'NOTE: Running task [0-9]+ of [0-9]+' "${BUILD_LOG}" | tail -n1 || true)
-            if [ -n "${task_line}" ] && [ "${task_line}" != "${last_task_line}" ]; then
-              echo "${task_line}"
-              last_task_line="${task_line}"
-            fi
-
-            warn_count=$(grep -c '^WARNING:' "${BUILD_LOG}" || true)
-            err_count=$(grep -c '^ERROR:' "${BUILD_LOG}" || true)
-            echo "Heartbeat: elapsed=${elapsed}s (tasks running) warnings=${warn_count} errors=${err_count} log_size=${log_size}"
-          done
-
-          set +e
-          wait "${build_pid}"
-          build_rc=$?
-          set -e
-
-          if [ ${build_rc} -ne 0 ]; then
-            echo "============================================================"
-            echo "ERROR: Kas build failed with exit code ${build_rc}"
-            echo "============================================================"
-            echo "Last 150 lines from ${BUILD_LOG}:"
-            tail -n 150 "${BUILD_LOG}" || true
-            exit ${build_rc}
-          fi
-
-          echo "Kas build completed successfully for ${INPUTS_MACHINE}"
-          grep -E '^(NOTE: Tasks Summary:|Summary:|WARNING:|ERROR:)' "${BUILD_LOG}" | tail -n 50 || true
-        env:
-          INPUTS_MACHINE: ${{ inputs.machine }}
+          $KAS_CONTAINER build ${KAS_YAMLS}
 
       - name: Kas build images (buildstats)
         if:  inputs.target
