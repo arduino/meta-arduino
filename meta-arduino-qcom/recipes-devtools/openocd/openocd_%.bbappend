@@ -2,8 +2,8 @@ FILESEXTRAPATHS:prepend:imola := "${THISDIR}/files/imola:"
 
 # imola: build from the facchinm fork (jomla branch)
 SRC_URI:imola = " \
-    git://github.com/facchinm/OpenOCD.git;protocol=https;name=openocd;branch=jomla;destsuffix=git \
-    git://github.com/msteveb/jimtcl.git;protocol=https;name=jimtcl;branch=master;destsuffix=git/jimtcl \
+    git://github.com/facchinm/OpenOCD.git;protocol=https;name=openocd;branch=jomla;destsuffix=${BB_GIT_DEFAULT_DESTSUFFIX} \
+    git://github.com/msteveb/jimtcl.git;protocol=https;name=jimtcl;branch=master;destsuffix=${BB_GIT_DEFAULT_DESTSUFFIX}/jimtcl \
     file://openocd_gpiod.cfg \
     file://stm32u5x.cfg \
     file://stm32x5x_common.cfg \
