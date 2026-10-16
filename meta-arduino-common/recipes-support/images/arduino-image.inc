@@ -76,8 +76,8 @@ inherit extrausers
 EXTRA_USERS_PARAMS = "usermod -p '' root;"
 
 ARDUINO-USER = "arduino"
-ARDUINO-UID = "1001"
-ARDUINO-GID = "1001"
+ARDUINO-UID = "1000"
+ARDUINO-GID = "1000"
 
 # Create arduino user and add to groups
 EXTRA_USERS_PARAMS += " \
