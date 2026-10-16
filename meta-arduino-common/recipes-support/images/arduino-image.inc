@@ -21,52 +21,26 @@ CORE_IMAGE_EXTRA_INSTALL += " \
 CORE_IMAGE_EXTRA_INSTALL += " \
     arduino-usb-gadget \
     libusbgx-config \
+"
+
+# Expand rootfs filesystem on first boot to fit media storage
+CORE_IMAGE_EXTRA_INSTALL += " \
     expand-rootfs \
 "
 
 # Install extra packages (minimal)
 CORE_IMAGE_EXTRA_INSTALL += " \
-    packagegroup-core-full-cmdline-extended \
-    procps \
-    iw \
-    net-tools \
-    iproute2 \
-    wpa-supplicant \
-    dnsmasq \
-    i2c-tools \
-    fio \
-    stress-ng \
-    bluez5 \
-    libgpiod \
-    libgpiod-tools \
-    can-utils \
-    u-boot-fw-utils \
-    ethtool \
-    usbutils \
-    sudo \
+    packagegroup-arduino-bringup \
 "
 
 # Install extra packages (extra), comment if too big
 CORE_IMAGE_EXTRA_INSTALL += " \
-    packagegroup-base \
-    systemd \
-    networkmanager \
-    networkmanager-wifi \
-    networkmanager-nmcli \
-    iperf3 \
-    openocd \
-    htop \
-    hdparm \
-    dtc \
-    python3-core \
-    python3-smbus2 \
-    python3-periphery \
-    python3-pyserial \
-    python3-speedtest-cli \
-    fb-test \
-    fbida \
-    v4l-utils \
-    strace \
+    packagegroup-arduino-bringup-extra \
+"
+
+# Privilege escalation and user administration
+CORE_IMAGE_EXTRA_INSTALL += " \
+    sudo \
 "
 
 # Change users and passwords

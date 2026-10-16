@@ -7,7 +7,7 @@ LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/GPL-3.0-or-later;md5=1c76c4cc35
 PV = "0.11.1"
 
 SRC_URI = "git://github.com/arduino/arduino-app-cli.git;nobranch=1;protocol=https"
-SRCREV = "v${PV}"
+SRCREV = "600152dac08ee7ebfe89c4d53a2a0a685bf83f2a"
 
 inherit go
 
