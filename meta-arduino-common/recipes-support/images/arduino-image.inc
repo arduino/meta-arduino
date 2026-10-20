@@ -21,6 +21,10 @@ CORE_IMAGE_EXTRA_INSTALL += " \
 CORE_IMAGE_EXTRA_INSTALL += " \
     arduino-usb-gadget \
     libusbgx-config \
+"
+
+# Expand rootfs filesystem on first boot to fit media storage
+CORE_IMAGE_EXTRA_INSTALL += " \
     expand-rootfs \
 "
 
