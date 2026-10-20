@@ -22,7 +22,6 @@ CORE_IMAGE_EXTRA_INSTALL:append = " \
     qcom-adreno \
     qcom-sensors-binaries \
     qwes \
-    ${@bb.utils.contains('BBFILE_COLLECTIONS', 'meta-audioreach', 'packagegroup-audioreach', '', d)} \
 "
 
 CORE_IMAGE_EXTRA_INSTALL:append:aarch64 = " \
