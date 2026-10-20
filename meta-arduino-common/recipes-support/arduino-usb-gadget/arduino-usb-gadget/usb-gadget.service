@@ -1,6 +1,8 @@
 [Unit]
 Description=Arduino USB Gadget Setup
 Documentation=man:systemd.special(7)
+# When adbd is enabled, android-tools-adbd.service owns the gadget lifecycle
+ConditionPathExists=!/etc/usb-debugging-enabled
 # usb-gadget.target is pulled in by systemd's udev rule as soon as a UDC shows up
 ConditionPathExists=/sys/class/udc
 After=local-fs.target

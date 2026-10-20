@@ -178,15 +178,15 @@ bind() {
         exit 1
     fi
 
-    udc=$(select_udc) || {
-        echo "Error: no UDC controller found in ${UDC_DIR}" >&2
-        exit 1
-    }
-
     if [ -n "$(cat "${GADGET_PATH}/UDC" 2>/dev/null)" ]; then
         echo "Gadget ${GADGET_NAME} already bound"
         return 0
     fi
+
+    udc=$(select_udc) || {
+        echo "Error: no UDC controller found in ${UDC_DIR}" >&2
+        exit 1
+    }
 
     echo "Binding Arduino USB gadget to UDC: ${udc}"
     for attempt in 1 2 3 4 5; do
