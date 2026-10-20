@@ -30,46 +30,12 @@ CORE_IMAGE_EXTRA_INSTALL += " \
 
 # Install extra packages (minimal)
 CORE_IMAGE_EXTRA_INSTALL += " \
-    packagegroup-core-full-cmdline-extended \
-    procps \
-    iw \
-    net-tools \
-    iproute2 \
-    wpa-supplicant \
-    dnsmasq \
-    i2c-tools \
-    fio \
-    stress-ng \
-    bluez5 \
-    libgpiod \
-    libgpiod-tools \
-    can-utils \
-    u-boot-fw-utils \
-    ethtool \
-    usbutils \
+    packagegroup-arduino-bringup \
 "
 
 # Install extra packages (extra), comment if too big
 CORE_IMAGE_EXTRA_INSTALL += " \
-    packagegroup-base \
-    systemd \
-    networkmanager \
-    networkmanager-wifi \
-    networkmanager-nmcli \
-    iperf3 \
-    openocd \
-    htop \
-    hdparm \
-    dtc \
-    python3-core \
-    python3-smbus2 \
-    python3-periphery \
-    python3-pyserial \
-    python3-speedtest-cli \
-    fb-test \
-    fbida \
-    v4l-utils \
-    strace \
+    packagegroup-arduino-bringup-extra \
 "
 
 # Privilege escalation and user administration
