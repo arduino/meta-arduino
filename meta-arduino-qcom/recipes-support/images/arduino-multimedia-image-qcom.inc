@@ -1,3 +1,6 @@
+# Qualcomm proprietary multimedia, graphics and accelerator extensions for
+# Arduino images. Inspired by qcom-multimedia-proprietary-image from meta-qcom-distro.
+
 CORE_IMAGE_EXTRA_INSTALL:append = " \
     packagegroup-qcom-utilities-gpu-utils \
     thermald \
