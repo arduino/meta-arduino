@@ -1,0 +1,5 @@
+# Arduino Monza (VENTUNO Q) USB gadget identity
+vendor=0x2341
+product=0x007a
+manufacturer="Arduino"
+model="VENTUNO Q"

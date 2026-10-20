@@ -1,0 +1,5 @@
+# Arduino Imola (UNO Q) USB gadget identity
+vendor=0x2341
+product=0x0078
+manufacturer="Arduino"
+model="UNO Q"
