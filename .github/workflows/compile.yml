@@ -1,3 +1,5 @@
+name: Compile Target
+
 on:
   workflow_call:
     inputs:
