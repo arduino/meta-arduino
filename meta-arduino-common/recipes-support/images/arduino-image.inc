@@ -47,7 +47,6 @@ CORE_IMAGE_EXTRA_INSTALL += " \
     u-boot-fw-utils \
     ethtool \
     usbutils \
-    sudo \
 "
 
 # Install extra packages (extra), comment if too big
@@ -71,6 +70,11 @@ CORE_IMAGE_EXTRA_INSTALL += " \
     fbida \
     v4l-utils \
     strace \
+"
+
+# Privilege escalation and user administration
+CORE_IMAGE_EXTRA_INSTALL += " \
+    sudo \
 "
 
 # Change users and passwords
