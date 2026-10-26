@@ -10,17 +10,21 @@ LIC_FILES_CHKSUM = "file://LICENSE.txt;md5=223037c4be0bfc6cf757035432adf983"
 
 DEPENDS = "fastrpc"
 
-SRC_URI = "git://github.com/qualcomm/libqcnpuperf;protocol=https;nobranch=1"
-SRCREV = "b2ec245d3b0d98cdb3df75f22ba7209e461c8099"
+SRC_URI = "git://github.com/qualcomm/libqcnpuperf;protocol=https;nobranch=1 \
+           file://0001-examples-add-lightweight-qcnpu-smi-tool-with-JSON-ou.patch \
+          "
+SRCREV = "d452cbcf505a1a87b52ba567244dab6332c2acd2"
 
 inherit cmake pkgconfig
 
-# Enable the ncurses-based CLI sample built into its own subpackage libqcnpuperf-cli.
-PACKAGECONFIG ??= "cli"
+# Enable the lightweight qcnpu-smi tool by default.
+PACKAGECONFIG ??= "smi"
 PACKAGECONFIG[cli] = "-DQCNPU_PERF_BUILD_CLI=ON,-DQCNPU_PERF_BUILD_CLI=OFF,ncurses"
+PACKAGECONFIG[smi] = "-DQCNPU_PERF_BUILD_SMI=ON,-DQCNPU_PERF_BUILD_SMI=OFF"
 
-PACKAGES =+ "${PN}-cli"
+PACKAGES =+ "${PN}-cli ${PN}-smi"
 FILES:${PN}-cli = "${bindir}/qcnpuperf_cli"
+FILES:${PN}-smi = "${bindir}/qcnpu-smi"
 
 # Build and runtime require aarch64 with Hexagon DSP / FastRPC support.
 COMPATIBLE_MACHINE = "^$"
