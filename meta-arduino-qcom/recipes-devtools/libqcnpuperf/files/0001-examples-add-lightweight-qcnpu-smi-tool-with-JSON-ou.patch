@@ -1,0 +1,185 @@
+From 9b9c864e09ee7765f3d5e94a17503a59d24c4100 Mon Sep 17 00:00:00 2001
+From: Massimo Pennazio <maxipenna@libero.it>
+Date: Mon, 26 Oct 2026 13:24:49 +0100
+Subject: [PATCH] examples: add lightweight qcnpu-smi tool with JSON output
+
+---
+ CMakeLists.txt       |  19 +++++++
+ examples/qcnpu_smi.c | 128 +++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 147 insertions(+)
+ create mode 100644 examples/qcnpu_smi.c
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 0a38aaf..e1e84c0 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -10,6 +10,7 @@ project(qcnpuperf
+ # Options / paths
+ # ------------------------------------------------------------
+ option(QCNPU_PERF_BUILD_CLI "Build ncurses-based CLI sample (qcnpuperf_cli)" ON)
++option(QCNPU_PERF_BUILD_SMI "Build lightweight CLI tool (qcnpu-smi)" ON)
+ 
+ # Allow overriding FastRPC paths at configure time
+ find_path(FASTRPC_INCLUDE_DIR AEEStdDef.h
+@@ -118,6 +119,24 @@ if(QCNPU_PERF_BUILD_CLI)
+   endif()
+ endif()
+ 
++# ------------------------------------------------------------
++# Lightweight CLI tool (qcnpu-smi)
++# ------------------------------------------------------------
++if(QCNPU_PERF_BUILD_SMI)
++  add_executable(qcnpu-smi examples/qcnpu_smi.c)
++
++  target_include_directories(qcnpu-smi PRIVATE
++    ${CMAKE_CURRENT_SOURCE_DIR}/inc
++    ${FASTRPC_INCLUDE_DIR}
++  )
++
++  target_link_libraries(qcnpu-smi PRIVATE
++    qcnpuperf
++  )
++
++  install(TARGETS qcnpu-smi RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
++endif()
++
+ # ------------------------------------------------------------
+ # Install rules
+ # ------------------------------------------------------------
+diff --git a/examples/qcnpu_smi.c b/examples/qcnpu_smi.c
+new file mode 100644
+index 0000000..3333ee0
+--- /dev/null
++++ b/examples/qcnpu_smi.c
+@@ -0,0 +1,128 @@
++/*
++    Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
++    Redistribution and use in source and binary forms, with or without
++    modification, are permitted (subject to the limitations in the
++    disclaimer below) provided that the following conditions are met:
++        * Redistributions of source code must retain the above copyright
++          notice, this list of conditions and the following disclaimer.
++        * Redistributions in binary form must reproduce the above
++          copyright notice, this list of conditions and the following
++          disclaimer in the documentation and/or other materials provided
++          with the distribution.
++        * Neither the name of Qualcomm Technologies, Inc. nor the names of its
++          contributors may be used to endorse or promote products derived
++          from this software without specific prior written permission.
++    NO EXPRESS OR IMPLIED LICENSES TO ANY PARTY'S PATENT RIGHTS ARE
++    GRANTED BY THIS LICENSE. THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT
++    HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED
++    WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
++    MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
++    IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
++    ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
++    DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE
++    GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
++    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER
++    IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
++    OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
++    IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
++*/
++
++#include "qcom_dsp.h"
++#include <stdio.h>
++#include <stdlib.h>
++#include <stdbool.h>
++#include <unistd.h>
++#include <getopt.h>
++
++static void print_usage(const char *progname)
++{
++    fprintf(stderr,
++            "Usage: %s [OPTIONS]\n\n"
++            "Options:\n"
++            "  -c, --count <N>       Number of samples to collect before exit (default: 1, 0 = infinite)\n"
++            "  -i, --interval <sec>  Sample interval in seconds (default: 1)\n"
++            "  -j, --json            Output newline-delimited JSON (default: text)\n"
++            "  -h, --help            Show this help message\n",
++            progname);
++}
++
++int main(int argc, char *argv[])
++{
++    int count = 1;
++    int interval_sec = 1;
++    bool json_output = false;
++
++    static struct option long_options[] = {
++        {"count",    required_argument, 0, 'c'},
++        {"interval", required_argument, 0, 'i'},
++        {"json",     no_argument,       0, 'j'},
++        {"help",     no_argument,       0, 'h'},
++        {0, 0, 0, 0}
++    };
++
++    int opt;
++    while ((opt = getopt_long(argc, argv, "c:i:jh", long_options, NULL)) != -1) {
++        switch (opt) {
++        case 'c':
++            count = atoi(optarg);
++            if (count < 0)
++                count = 0;
++            break;
++        case 'i':
++            interval_sec = atoi(optarg);
++            if (interval_sec < 1)
++                interval_sec = 1;
++            break;
++        case 'j':
++            json_output = true;
++            break;
++        case 'h':
++            print_usage(argv[0]);
++            return EXIT_SUCCESS;
++        default:
++            print_usage(argv[0]);
++            return EXIT_FAILURE;
++        }
++    }
++
++    struct qcom_dsp_ctx *ctx = qcom_dsp_open(DSP_NPU0);
++    if (!ctx) {
++        fprintf(stderr, "Error: qcom_dsp_open(DSP_NPU0) failed\n");
++        return EXIT_FAILURE;
++    }
++
++    unsigned int arch = qcom_dsp_prof_get_q6_arch_version(ctx);
++    int no_metrics = 0;
++    int iter = 0;
++
++    while (count == 0 || iter < count) {
++        struct sysmon_query_prof_data *data = qcom_dsp_get_prof_data(ctx, &no_metrics);
++        if (!data || no_metrics <= 0) {
++            fprintf(stderr, "Error: qcom_dsp_get_prof_data failed\n");
++            qcom_dsp_close(ctx);
++            return EXIT_FAILURE;
++        }
++
++        float hmx = qcom_dsp_prof_get_hmx_utilization(data);
++        float hvx = qcom_dsp_prof_get_hvx_utilization(data);
++        float q6 = qcom_dsp_prof_get_q6_utilization(data);
++        unsigned int clk = qcom_dsp_prof_get_q6_clock(data);
++
++        if (json_output) {
++            printf("{\"arch\":%u,\"clk_khz\":%u,\"q6_util\":%.2f,\"hvx_util\":%.2f,\"hmx_util\":%.2f}\n",
++                   arch, clk, q6, hvx, hmx);
++        } else {
++            printf("NPU0 [v%u] | Clock: %u kHz | Q6: %.2f%% | HVX: %.2f%% | HMX: %.2f%%\n",
++                   arch, clk, q6, hvx, hmx);
++        }
++        fflush(stdout);
++
++        iter++;
++        if (count == 0 || iter < count) {
++            sleep((unsigned int)interval_sec);
++        }
++    }
++
++    qcom_dsp_close(ctx);
++    return EXIT_SUCCESS;
++}
+-- 
+2.43.0
+
