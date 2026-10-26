@@ -3,6 +3,8 @@ From: Massimo Pennazio <maxipenna@libero.it>
 Date: Mon, 26 Oct 2026 13:24:49 +0100
 Subject: [PATCH] examples: add lightweight qcnpu-smi tool with JSON output
 
+Upstream-Status: Submitted
+Signed-off-by: Massimo Pennazio <maxipenna@libero.it>
 ---
  CMakeLists.txt       |  19 +++++++
  examples/qcnpu_smi.c | 128 +++++++++++++++++++++++++++++++++++++++++++
