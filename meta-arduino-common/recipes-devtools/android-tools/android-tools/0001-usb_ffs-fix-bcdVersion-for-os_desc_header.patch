@@ -1,0 +1,42 @@
+From: Massimo Pennazio <maxipenna@libero.it>
+Date: Tue, 27 Oct 2026 10:45:00 +0200
+Subject: [PATCH] usb_ffs: fix bcdVersion for os_desc_header
+
+The Linux kernel FunctionFS driver validates bcdVersion against 0x0100
+(USB 1.00) in little-endian order, emitting:
+"bcdVersion must be 0x0100, stored in Little Endian order. Userspace driver
+should be fixed, accepting 0x0001 for compatibility."
+
+Fix bcdVersion in os_desc_header and os_prop_header to cpu_to_le32(0x0100).
+
+Upstream-Status: Pending
+
+Signed-off-by: Massimo Pennazio <maxipenna@libero.it>
+---
+ packages/modules/adb/daemon/usb_ffs.cpp | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/packages/modules/adb/daemon/usb_ffs.cpp b/packages/modules/adb/daemon/usb_ffs.cpp
+index d6b3d1f..593f01c 100644
+--- a/packages/modules/adb/daemon/usb_ffs.cpp
++++ b/packages/modules/adb/daemon/usb_ffs.cpp
+@@ -213,7 +213,7 @@ struct usb_ext_compat_desc os_desc_compat = {
+ static struct usb_os_desc_header os_desc_header = {
+     .interface = cpu_to_le32(0),
+     .dwLength = cpu_to_le32(sizeof(os_desc_header) + sizeof(os_desc_compat)),
+-    .bcdVersion = cpu_to_le32(1),
++    .bcdVersion = cpu_to_le32(0x0100),
+     .wIndex = cpu_to_le32(4),
+     .bCount = cpu_to_le32(1),
+     .Reserved = cpu_to_le32(0),
+@@ -222,7 +222,7 @@ static struct usb_os_desc_header os_desc_header = {
+ static struct usb_os_desc_header os_prop_header = {
+     .interface = cpu_to_le32(0),
+     .dwLength = cpu_to_le32(sizeof(os_desc_header) + sizeof(os_prop_values)),
+-    .bcdVersion = cpu_to_le32(1),
++    .bcdVersion = cpu_to_le32(0x0100),
+     .wIndex = cpu_to_le32(5),
+     .wCount = cpu_to_le16(1),
+ };
+-- 
+2.34.1
