@@ -247,7 +247,7 @@ jobs:
       (inputs.skip_if_github_cached != true || needs.github-cache-check.outputs.cache_hit != 'true')
     runs-on: ubuntu-latest
     steps:
-      - uses: qualcomm-linux/meta-qcom/.github/actions/print-build-output@master
+      - uses: qualcomm-linux/meta-qcom/.github/actions/print-build-output@a3055aef0ac0b9c317e750498d619fde70332c01 # master
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           pattern: build-url*
