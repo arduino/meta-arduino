@@ -85,8 +85,8 @@ jobs:
             ${KAS_CONTAINER} lock ci/imola.yml:ci/imola.lock.yml
             ${KAS_CONTAINER} lock ci/monza.yml:ci/monza.lock.yml
           else
-            ${KAS_CONTAINER} lock ci/imola.yml
-            ${KAS_CONTAINER} lock ci/monza.yml
+            ${KAS_CONTAINER} lock --update ci/imola.yml
+            ${KAS_CONTAINER} lock --update ci/monza.yml
           fi
         env:
           USE_LOCKFILE: ${{ inputs.use_lockfile }}
