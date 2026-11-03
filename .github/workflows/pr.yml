@@ -21,5 +21,4 @@ jobs:
       actions: read
     uses: ./.github/workflows/build-yocto.yml
     with:
-      profile: pr
       use_lockfile: true

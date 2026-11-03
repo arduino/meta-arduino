@@ -7,10 +7,6 @@ on:
         required: false
         type: boolean
         default: true
-      profile:
-        required: false
-        type: string
-        default: "full" # values: pr | full | weekly
       sdk:
         required: false
         type: boolean
@@ -252,9 +248,6 @@ jobs:
           elif [[ "$GITHUB_EVENT_NAME" = "push" ]]; then
             echo "OBJECT_TAG=retention=15d" >> $GITHUB_ENV
             echo "BUILD_TYPE=buildType=PUSH" >> $GITHUB_ENV
-          elif [[ "${INPUTS_PROFILE}" = "weekly" ]]; then
-            echo "OBJECT_TAG=retention=15d" >> $GITHUB_ENV
-            echo "BUILD_TYPE=buildType=WEEKLY" >> $GITHUB_ENV
           elif [[ "$GITHUB_WORKFLOW" == *"Nightly Build"* ]]; then
             echo "OBJECT_TAG=retention=15d" >> $GITHUB_ENV
             echo "BUILD_TYPE=buildType=NIGHTLY" >> $GITHUB_ENV
@@ -262,9 +255,7 @@ jobs:
             echo "OBJECT_TAG=retention=15d" >> $GITHUB_ENV
             echo "BUILD_TYPE=buildType=OTHER" >> $GITHUB_ENV
           fi
-        env:
-          INPUTS_PROFILE: ${{ inputs.profile }}
-      
+
       - name: Upload artifacts to S3 bucket
         uses: qualcomm-linux/upload-private-artifact-action@aws-v5
         id: upload_s3_artifacts
