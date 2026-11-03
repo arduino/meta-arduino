@@ -7,8 +7,8 @@ header:
 overrides:
   repos:
     meta-qcom:
-      commit: 0397e374458f3ffff89cd6401cac40cef1371f58
+      commit: b0eaab97bbf4290a37441df0e8f9b7b13d0131e4
     meta-qcom-distro:
-      commit: 805634470ec74ae15ca04b4f164a608f06b362fa
+      commit: 55613950e7b082dd306481b6769761282296bfcf
     meta-qcom-arduino:
-      commit: 35f3dfdd4dca56d0df60b621ff8fd70a8043bcfd
+      commit: 88865373932d9f7178917017b4c513f2194381ed
