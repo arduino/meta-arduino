@@ -94,11 +94,13 @@ jobs:
           fi
           # Only the "Nightly Build" workflow (master's cron trigger, the
           # wrynose dispatch relay, or a manual run of that same workflow)
-          # is meant to track SBOM state over time; skip the SPDX image SBOM
-          # on PR validation and on ad-hoc manual "Build Yocto" dispatches.
+          # is meant to track SBOM/CVE state over time; skip the SPDX image
+          # SBOM on PR validation and on ad-hoc manual "Build Yocto"
+          # dispatches, and only annotate it with Yocto's CVE-check data
+          # (NVD/CVE-list feeds, embedded as VEX statements) on the nightly.
           SBOM_YAML=":ci/nospdx.yml"
           if [ "${GITHUB_WORKFLOW}" = "Nightly Build" ]; then
-            SBOM_YAML=""
+            SBOM_YAML=":ci/sbom-cve-check.yml"
           fi
           echo "KAS_YAMLS=ci/ci.yml:ci/${INPUTS_MACHINE}.yml${LOCK_YAML}${INPUTS_DISTRO_YAML}${INPUTS_KERNEL_YAML}${SBOM_YAML}:ci/build-id.yml" >> $GITHUB_ENV
           echo "INPUTS_CACHE_DIR=${INPUTS_CACHE_DIR}" >> $GITHUB_ENV
