@@ -6,7 +6,7 @@ HOMEPAGE = "https://github.com/arduino/arduino-router"
 LICENSE = "GPL-3.0-or-later"
 LIC_FILES_CHKSUM = "file://LICENSE.txt;md5=1ebbd3e34237af26da5dc08a4e440464"
 
-PV = "0.9.0"
+PV = "0.11.0"
 
 SRC_URI = "git://github.com/arduino/arduino-router.git;protocol=https;nobranch=1"
 SRCREV = "e25c513d74a0105c020b677a1c9b8228618fb586"
