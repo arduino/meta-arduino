@@ -15,6 +15,11 @@ BBCLASSEXTEND = "native"
 
 GO_INSTALL = "${GO} build -trimpath -o arduino-cli ./main.go"
 
+# This recipe has no vendor/ dir, so go build fetches missing modules from
+# GOPROXY live during do_compile; allow network access for that task since
+# bitbake blocks it by default.
+do_compile[network] = "1"
+
 do_rm_work:prepend() {
     if [ -d "${WORKDIR}/build/pkg/mod" ]; then
         bbwarn "Fixing permissions into ${WORKDIR}/build/pkg/mod"
