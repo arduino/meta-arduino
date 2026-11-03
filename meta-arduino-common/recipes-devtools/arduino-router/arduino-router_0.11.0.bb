@@ -13,6 +13,11 @@ SRCREV = "e25c513d74a0105c020b677a1c9b8228618fb586"
 
 inherit go systemd
 
+# This recipe has no vendor/ dir, so go build fetches missing modules from
+# GOPROXY live during do_compile; allow network access for that task since
+# bitbake blocks it by default.
+do_compile[network] = "1"
+
 do_compile() {
     cd ${S}
     export CGO_ENABLED=0
