@@ -16,10 +16,10 @@ repos:
 overrides:
   repos:
     meta-qcom:
-      commit: a1a92a33c7c966582a59a625d89809ccd373165f
+      commit: c8b75cf9af35a2e9dae5178d4430b7a48859db0b
     meta-qcom-distro:
-      commit: c3e4c471ddf7874b95a9d417a61019af25aa2c5b
+      commit: c1ac10a306b958dcaefdf1441e367927a2d08376
     meta-qcom-arduino:
-      commit: a65e94a51f8233607b683787735225a10d80fe65
+      commit: 1704d8090ba8e85261afa3d627f81890b490fc0b
     meta-lts-mixins:
       commit: 71dfb81bd98f59ca2127d39b100ecbb8ce1e0ba3
