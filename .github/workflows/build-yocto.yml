@@ -3,11 +3,6 @@ name: Build Yocto
 on:
   workflow_dispatch:
     inputs:
-      profile:
-        description: "Build profile (full | pr)"
-        required: false
-        type: string
-        default: "full"
       image:
         description: "Image to build (all | a single target image)"
         required: false
@@ -30,10 +25,6 @@ on:
         default: true
   workflow_call:
     inputs:
-      profile:
-        required: false
-        type: string
-        default: "full"
       image:
         description: "Image to build (all | a single target image)"
         required: false
