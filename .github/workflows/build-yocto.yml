@@ -8,6 +8,16 @@ on:
         required: false
         type: string
         default: "full"
+      image:
+        description: "Image to build (all | a single target image)"
+        required: false
+        type: choice
+        default: "all"
+        options:
+          - all
+          - arduino-console-image
+          - arduino-container-image
+          - arduino-full-image
       skip_if_github_cached:
         description: "Skip the build matrix if the github actions cache already records a previously-successful run"
         required: false
@@ -24,6 +34,11 @@ on:
         required: false
         type: string
         default: "full"
+      image:
+        description: "Image to build (all | a single target image)"
+        required: false
+        type: string
+        default: "all"
       skip_if_github_cached:
         required: false
         type: boolean
@@ -239,6 +254,7 @@ jobs:
       kernel_dirname: ${{ matrix.kernel.dirname }}
       cache_dir: ${{ needs.compile-env.outputs.CACHE_DIR }}
       use_lockfile: ${{ inputs.use_lockfile }}
+      image: ${{ inputs.image }}
 
   publish_summary:
     needs: [github-cache-check, compile]
