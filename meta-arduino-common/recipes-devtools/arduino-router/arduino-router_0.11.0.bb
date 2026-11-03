@@ -35,7 +35,7 @@ SYSTEMD_SERVICE:${PN} = " \
     arduino-router-serial.path \
 "
 
-SYSTEMD_AUTO_ENABLE = "disable"
+SYSTEMD_AUTO_ENABLE = "enable"
 
 do_install() {
     install -d ${D}${bindir}
