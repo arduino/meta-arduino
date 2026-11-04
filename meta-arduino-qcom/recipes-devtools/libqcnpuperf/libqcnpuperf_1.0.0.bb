@@ -18,7 +18,7 @@ SRCREV = "d452cbcf505a1a87b52ba567244dab6332c2acd2"
 inherit cmake pkgconfig
 
 # Enable the lightweight qcnpu-smi tool by default.
-PACKAGECONFIG ??= "smi"
+PACKAGECONFIG ??= "smi cli"
 PACKAGECONFIG[cli] = "-DQCNPU_PERF_BUILD_CLI=ON,-DQCNPU_PERF_BUILD_CLI=OFF,ncurses"
 PACKAGECONFIG[smi] = "-DQCNPU_PERF_BUILD_SMI=ON,-DQCNPU_PERF_BUILD_SMI=OFF"
 
