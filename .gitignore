@@ -11,3 +11,22 @@ __pycache__/
 
 # Local agent knowledge base (rsync'd external layers, not for version control)
 .agents/
+
+# kas workspace artifacts when kas is run with this repo as its top-level
+# directory (e.g. on the remote build server), rather than under .agents/
+/mnt/
+/ci
+/kas-container
+/build/
+/bitbake/
+/oe-core/
+/meta-qcom/
+/meta-qcom-distro/
+/meta-qcom-arduino/
+/meta-openembedded/
+/meta-security/
+/meta-virtualization/
+/meta-selinux/
+/meta-updater/
+/meta-audioreach/
+/meta-ai/
