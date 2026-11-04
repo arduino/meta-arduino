@@ -8,6 +8,10 @@ DEPENDS += "arduino-cli-native base-passwd"
 # Use ARDUINO_ZEPHYR_LOADER from machine config
 FW_SRC_DIR = "${B}/home/arduino/.arduino15/packages/arduino/hardware/zephyr/${ARDUINO_CORE_VERSION}"
 
+# do_install_arduino_core fetches package/library index files via arduino-cli,
+# so allow network access for that task since bitbake blocks it by default.
+do_compile[network] = "1"
+
 do_compile() {
     do_install_arduino_core
     if [ -n "${ARDUINO_SKETCH_LIBS}" ]; then
