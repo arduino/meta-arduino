@@ -69,7 +69,7 @@ create_arduino_home() {
     fi
 }
 
-ROOTFS_POSTPROCESS_COMMAND += "create_arduino_home; "
+ROOTFS_POSTPROCESS_COMMAND += "create_arduino_home"
 
 fakeroot add_custom_sudoers () {
     # Enable sudo group for arduino user
@@ -78,4 +78,4 @@ fakeroot add_custom_sudoers () {
     chmod 0440 ${IMAGE_ROOTFS}${sysconfdir}/sudoers.d/sudo-group
 }
 
-IMAGE_PREPROCESS_COMMAND += "add_custom_sudoers; "
+IMAGE_PREPROCESS_COMMAND += "add_custom_sudoers"

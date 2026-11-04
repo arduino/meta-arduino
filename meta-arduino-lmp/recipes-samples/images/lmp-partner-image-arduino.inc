@@ -52,7 +52,7 @@ write_git_sha() {
     echo "META_LAYER_GIT_SHA=${GIT_SHA}" >> ${IMAGE_ROOTFS}/etc/os-release
 }
 
-ROOTFS_POSTPROCESS_COMMAND += "write_git_sha; "
+ROOTFS_POSTPROCESS_COMMAND += "write_git_sha"
 
 fakeroot do_populate_rootfs_add_custom_sudoers () {
     # Allow sudo group users to use sudo
@@ -60,6 +60,6 @@ fakeroot do_populate_rootfs_add_custom_sudoers () {
     install -m 0440 ${WORKDIR}/${SUDOERS_FILE} ${IMAGE_ROOTFS}${sysconfdir}/sudoers.d/51-arduino
 }
 
-IMAGE_PREPROCESS_COMMAND += "do_populate_rootfs_add_custom_sudoers; "
+IMAGE_PREPROCESS_COMMAND += "do_populate_rootfs_add_custom_sudoers"
 
 IMAGE_FSTYPES:append = " wic.zst tar.zst"
