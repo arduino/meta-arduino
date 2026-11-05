@@ -8,17 +8,6 @@ repos:
     url: https://github.com/qualcomm-linux/meta-qcom.git
     branch: wrynose
 
-  # meta-qcom's LAYERDEPENDS_qcom requires this layer (repo root == layer
-  # lts-linux-firmware-mixin on this branch). Declared explicitly rather than
-  # relying on the meta-qcom-arduino -> meta-qcom transitive include chain.
-  meta-lts-mixins:
-    url: https://git.yoctoproject.org/meta-lts-mixins
-    branch: wrynose/linux-firmware
-    patches:
-      shirka-wlan-fw:
-        repo: meta-qcom
-        path: patches/linux-firmware-mixin/0001-linux-firmware-backport-shikra-wlan-firmware-support.patch
-
   meta-qcom-arduino:
     url: https://github.com/qualcomm-linux/meta-qcom-arduino.git
     branch: wrynose
