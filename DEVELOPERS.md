@@ -70,6 +70,11 @@ For more hardware details and lifecycle status, see [HARDWARE.md](HARDWARE.md).
    export KAS_BUILD_DIR="$PWD/mnt/build"
    export DL_DIR="$PWD/mnt/downloads"
    export SSTATE_DIR="$PWD/mnt/sstate-cache"
+
+   # Same kas image as CI (.github/workflows/compile.yml): the released 5.5
+   # image lacks ccache, which meta-qcom's CI config requires. Drop this once
+   # a kas release newer than 5.5 is out.
+   export KAS_CONTAINER_IMAGE="ghcr.io/siemens/kas/kas@sha256:3f3d3257e8d4ca3adfcb2e0025e6da24339fb8d68a6999ca36c37381351582d5"
    ```
 3. Download `kas-container` and create the `ci` symlink:
    ```bash
