@@ -33,6 +33,11 @@ CORE_IMAGE_EXTRA_INSTALL += " \
     packagegroup-arduino-bringup \
 "
 
+# NetworkManager (from packagegroup-arduino-bringup) manages the network.
+# Drop systemd-networkd, recommended by systemd: it manages no interface here,
+# and its systemd-networkd-wait-online times out after 2 minutes on every boot.
+BAD_RECOMMENDATIONS += "systemd-networkd"
+
 # Install extra packages (extra), comment if too big
 CORE_IMAGE_EXTRA_INSTALL += " \
     packagegroup-arduino-bringup-extra \
