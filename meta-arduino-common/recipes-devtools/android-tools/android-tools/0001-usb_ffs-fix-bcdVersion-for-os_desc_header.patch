@@ -13,14 +13,14 @@ Upstream-Status: Pending
 
 Signed-off-by: Massimo Pennazio <maxipenna@libero.it>
 ---
- packages/modules/adb/daemon/usb_ffs.cpp | 4 ++--
+ system/core/adb/daemon/usb_ffs.cpp | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/packages/modules/adb/daemon/usb_ffs.cpp b/packages/modules/adb/daemon/usb_ffs.cpp
-index d6b3d1f..593f01c 100644
---- a/packages/modules/adb/daemon/usb_ffs.cpp
-+++ b/packages/modules/adb/daemon/usb_ffs.cpp
-@@ -213,7 +213,7 @@ struct usb_ext_compat_desc os_desc_compat = {
+diff --git a/system/core/adb/daemon/usb_ffs.cpp b/system/core/adb/daemon/usb_ffs.cpp
+index ef2291c..60d8db8 100644
+--- a/system/core/adb/daemon/usb_ffs.cpp
++++ b/system/core/adb/daemon/usb_ffs.cpp
+@@ -219,7 +219,7 @@ struct usb_ext_compat_desc os_desc_compat = {
  static struct usb_os_desc_header os_desc_header = {
      .interface = cpu_to_le32(0),
      .dwLength = cpu_to_le32(sizeof(os_desc_header) + sizeof(os_desc_compat)),
@@ -29,7 +29,7 @@ index d6b3d1f..593f01c 100644
      .wIndex = cpu_to_le32(4),
      .bCount = cpu_to_le32(1),
      .Reserved = cpu_to_le32(0),
-@@ -222,7 +222,7 @@ static struct usb_os_desc_header os_desc_header = {
+@@ -228,7 +228,7 @@ static struct usb_os_desc_header os_desc_header = {
  static struct usb_os_desc_header os_prop_header = {
      .interface = cpu_to_le32(0),
      .dwLength = cpu_to_le32(sizeof(os_desc_header) + sizeof(os_prop_values)),
