@@ -64,12 +64,20 @@ For more hardware details and lifecycle status, see [HARDWARE.md](HARDWARE.md).
    ```
 2. Set up the persistent host directories and cache environment variables:
    ```bash
-   mkdir -p "$PWD/mnt"/{build,sources,downloads,sstate-cache}
+   # Where kas keeps sources, build output and caches. Change it to put them
+   # elsewhere, e.g. a shared disk reused across checkouts.
+   export BASE_DIR="$PWD/mnt"
+   mkdir -p "$BASE_DIR"/{build,sources,downloads,sstate-cache}
 
-   export KAS_WORK_DIR="$PWD/mnt/sources"
-   export KAS_BUILD_DIR="$PWD/mnt/build"
-   export DL_DIR="$PWD/mnt/downloads"
-   export SSTATE_DIR="$PWD/mnt/sstate-cache"
+   export KAS_WORK_DIR="$BASE_DIR/sources"
+   export KAS_BUILD_DIR="$BASE_DIR/build"
+   export DL_DIR="$BASE_DIR/downloads"
+   export SSTATE_DIR="$BASE_DIR/sstate-cache"
+
+   # Same kas image as CI (.github/workflows/compile.yml): the released 5.5
+   # image lacks ccache, which meta-qcom's CI config requires. Drop this once
+   # a kas release newer than 5.5 is out.
+   export KAS_CONTAINER_IMAGE="ghcr.io/siemens/kas/kas@sha256:3f3d3257e8d4ca3adfcb2e0025e6da24339fb8d68a6999ca36c37381351582d5"
    ```
 3. Download `kas-container` and create the `ci` symlink:
    ```bash
