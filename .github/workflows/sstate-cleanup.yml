@@ -1,0 +1,24 @@
+name: Sstate cache cleanup
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "22 10 * * 6"   # weekly job - at "random" time - top of hour can be busy in github
+
+permissions: {}
+
+env:
+  CACHE_DIR: /efs/qli/meta-arduino
+
+jobs:
+  sstate-cache-cleanup:
+    if: github.repository_owner == 'arduino'
+    runs-on: ["self-hosted", "arduino-prd-u2404-amd64-large-od-ephem"]
+    timeout-minutes: 720
+    steps:
+      - name: Expire unused files from the shared sstate-cache dir
+        run: |
+          # bitbake refreshes the mtime of every sstate file a build uses, so
+          # a file older than 15 days was not used by any build in 15 days
+          find "${CACHE_DIR}/sstate-cache" -not -path "*/ccache/*" -type f -mtime +15 -delete
+          find "${CACHE_DIR}/sstate-cache" -not -path "*/ccache/*" -mindepth 1 -type d -empty -delete
