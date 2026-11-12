@@ -102,6 +102,16 @@ mount_ffs_adb() {
         mount -t functionfs adb "$FFS_ADB_DIR" -o "uid=${adb_uid},gid=${adb_gid}"
 }
 
+# Fixed NCM MAC addresses derived from the board serial, so the host keeps the
+# same interface name (enx<host_addr>) and network profile across boots.
+# Locally administered unicast: 02:... on the device side, 06:... on the host.
+# The kernel only accepts them before the function is linked into a config.
+set_ncm_addrs() {
+    hash=$(printf '%s-%s' "$serial" "$2" | md5sum | cut -c1-10 | sed 's/../&:/g; s/:$//')
+    echo "02:${hash}" > "$1/dev_addr"
+    echo "06:${hash}" > "$1/host_addr"
+}
+
 start() {
     load_config
 
@@ -153,6 +163,7 @@ start() {
                 ;;
             ncm)
                 mkdir -p "functions/ncm.usb${ncm_count}"
+                set_ncm_addrs "functions/ncm.usb${ncm_count}" "$ncm_count"
                 ln -s "functions/ncm.usb${ncm_count}" configs/c.1
                 ncm_count=$((ncm_count + 1))
                 ;;
