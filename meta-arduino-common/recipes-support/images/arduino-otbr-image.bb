@@ -12,7 +12,7 @@ IMAGE_FEATURES += " \
 
 IMAGE_FEATURES:remove = "${@bb.utils.contains('DISTRO_FEATURES', 'wayland', 'x11-base', '', d)}"
 
-include recipes-support/images/arduino-image.inc
+require recipes-support/images/arduino-image.inc
 
 CORE_IMAGE_EXTRA_INSTALL += " \
     otbr \
