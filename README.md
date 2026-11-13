@@ -13,7 +13,7 @@ This layer contains common components shared across Arduino platforms:
 - Arduino CLI tooling (arduino-cli, arduino-app-cli, arduino-router)
 - Avahi and NetworkManager configurations
 - Legacy: m4-proxy (old arduino-router)
-- Common image recipes (console, container, weston, multimedia, OTBR)
+- Common image recipes (console, weston, multimedia, container, full, OTBR), see [Image Recipes](DEVELOPERS.md#image-recipes)
 - USB gadget configurations (libusbgx-config)
 
 ### 2. `meta-arduino-nxp`
