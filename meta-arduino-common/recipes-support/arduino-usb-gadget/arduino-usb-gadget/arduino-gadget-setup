@@ -106,10 +106,21 @@ mount_ffs_adb() {
 # same interface name (enx<host_addr>) and network profile across boots.
 # Locally administered unicast: 02:... on the device side, 06:... on the host.
 # The kernel only accepts them before the function is linked into a config.
+# If one cannot be set, the kernel keeps the random address it chose when the
+# function was created, so a failure here must not stop the gadget setup.
 set_ncm_addrs() {
-    hash=$(printf '%s-%s' "$serial" "$2" | md5sum | cut -c1-10 | sed 's/../&:/g; s/:$//')
-    echo "02:${hash}" > "$1/dev_addr"
-    echo "06:${hash}" > "$1/host_addr"
+    hash=$(printf '%s-%s' "$serial" "$2" | md5sum 2>/dev/null | cut -c1-10 | sed 's/../&:/g; s/:$//')
+    case "$hash" in
+        ??:??:??:??:??) ;;
+        *)
+            echo "Warning: no MAC address hash for $1, keeping the random addresses" >&2
+            return 0
+            ;;
+    esac
+    echo "02:${hash}" > "$1/dev_addr" 2>/dev/null ||
+        echo "Warning: cannot set $1/dev_addr, keeping the random address" >&2
+    echo "06:${hash}" > "$1/host_addr" 2>/dev/null ||
+        echo "Warning: cannot set $1/host_addr, keeping the random address" >&2
 }
 
 start() {
