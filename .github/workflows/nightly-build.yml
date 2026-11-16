@@ -19,4 +19,4 @@ jobs:
     uses: ./.github/workflows/build-yocto.yml
     with:
       skip_if_github_cached: false
-      use_lockfile: false
+      use_lockfile: true
