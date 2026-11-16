@@ -1,5 +1,48 @@
 # Developer Guide
 
+## Image Recipes
+
+The image recipes live in `meta-arduino-common/recipes-support/images/` and are shared by all platforms.
+
+Every image applies `arduino-image.inc`, which adds the Arduino baseline: SSH server (dropbear), adbd, USB composite gadget, device tree and overlays, U-Boot scripts, first-boot rootfs expansion, bring-up package groups, `sudo` and the `arduino` user.
+
+| Image | Builds on | Adds |
+| --- | --- | --- |
+| `arduino-console-image` | `core-image` class (OE-Core) + `arduino-image.inc` | Nothing else: console-only system |
+| `arduino-weston-image` | `core-image-weston` (OE-Core) + `arduino-image.inc` | Weston (Wayland compositor) |
+| `arduino-multimedia-image` | `arduino-weston-image` | Audio (PipeWire, WirePlumber, ALSA), GStreamer, libcamera, V4L2, GPU/DRM utilities, TensorFlow Lite tools |
+| `arduino-container-image` | `arduino-multimedia-image` | Docker and Docker Compose; `arduino` user in the `docker` group |
+| `arduino-full-image` | `arduino-container-image` | Arduino App CLI (`arduino-app-cli`) |
+
+```mermaid
+graph TD
+    core["core-image class (OE-Core)"]
+    coreweston["core-image-weston (OE-Core)"]
+    inc(["arduino-image.inc"])
+    console["arduino-console-image"]
+    weston["arduino-weston-image"]
+    multimedia["arduino-multimedia-image"]
+    container["arduino-container-image"]
+    full["arduino-full-image"]
+
+    core --> console
+    core --> coreweston
+    coreweston --> weston
+    inc -.-> console
+    inc -.-> weston
+    weston --> multimedia
+    multimedia --> container
+    container --> full
+```
+
+Solid arrows point from a base to the recipe that builds on it; dotted arrows show where `arduino-image.inc` is applied.
+
+Notes:
+
+- `arduino-console-image` is not the base of the other images. It and `arduino-weston-image` are siblings that share `arduino-image.inc`.
+- Platform-specific packages are added by `.bbappend` files in the BSP layers. `meta-arduino-qcom` adds the Qualcomm multimedia, graphics and AI stack (`arduino-multimedia-image-qcom.inc`) to the multimedia, container and full images; `meta-arduino-nxp` adds `imx-gst1.0-plugin` to the multimedia image.
+- A `.bbappend` only applies to the recipe it is named after, not to recipes that `require` that recipe. A new image built on one of these needs its own `.bbappend` to get the platform-specific packages.
+
 ## Getting Started [NXP Builds]
 
 > **Warning**: Only the `scarthgap` branch is supported at the moment.
@@ -98,7 +141,7 @@ For more hardware details and lifecycle status, see [HARDWARE.md](HARDWARE.md).
    ./kas-container --runtime-args "--memory=48g" build meta-arduino-qcom/ci/monza.yml
    ```
 
-Note: Currently, the only supported image for QCom boards is `arduino-container-image.bb` (`arduino-container-image`).
+Note: Without `--target`, kas builds the default targets listed in `meta-arduino-qcom/ci/base.yml`: `arduino-console-image`, `arduino-container-image` and `arduino-full-image`. To build a single image, append `--target <image>` to the build command. See [Image Recipes](#image-recipes) for what each image contains.
 
 Note on updating dependencies: The repository includes committed `.lock.yml` files (e.g., `meta-arduino-qcom/ci/imola.lock.yml`) to ensure reproducible builds. If you need to update or regenerate lockfiles after updating base YAML definitions or upstream branch targets, run:
 ```bash
