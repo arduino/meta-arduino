@@ -3,7 +3,7 @@ multimedia packages (VPU and GPU) when available."
 
 LICENSE = "MIT"
 
-include recipes-graphics/images/core-image-weston.bb
+require recipes-graphics/images/core-image-weston.bb
 
 IMAGE_FEATURES += " \
     ${@bb.utils.contains('DISTRO_FEATURES', 'wayland', '', \
@@ -12,4 +12,4 @@ IMAGE_FEATURES += " \
 
 IMAGE_FEATURES:remove = "${@bb.utils.contains('DISTRO_FEATURES', 'wayland', 'x11-base', '', d)}"
 
-include recipes-support/images/arduino-image.inc
+require recipes-support/images/arduino-image.inc
