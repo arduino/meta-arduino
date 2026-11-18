@@ -39,12 +39,10 @@ load_config() {
 
     if [ -z "$serial" ]; then
         serial=$(sed -n -e '/androidboot.serialno/ s/.*androidboot.serialno=\([^ ]*\).*/\1/gp' /proc/cmdline 2>/dev/null || true)
-    fi
-    if [ -z "$serial" ] && [ -r /sys/devices/soc0/serial_number ]; then
-        serial=$(cat /sys/devices/soc0/serial_number)
-    fi
-    if [ -z "$serial" ] && [ -r /etc/machine-id ]; then
-        serial=$(cat /etc/machine-id)
+        for src in /sys/devices/soc0/serial_number /etc/machine-id; do
+            [ -n "$serial" ] && break
+            [ -r "$src" ] && serial=$(cat "$src")
+        done
     fi
     # Only letters and digits are allowed in a USB string descriptor serial
     serial=$(printf '%s' "$serial" | tr -cd 'A-Za-z0-9')
