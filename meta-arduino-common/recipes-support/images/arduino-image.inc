@@ -62,16 +62,12 @@ ARDUINO-GID = "1001"
 EXTRA_USERS_PARAMS += " \
     groupadd -g ${ARDUINO-GID} ${ARDUINO-USER}; \
     useradd -u ${ARDUINO-UID} -g ${ARDUINO-GID} -p '' -G audio,sudo,users,plugdev -d /home/${ARDUINO-USER} -r -s /bin/bash ${ARDUINO-USER}; \
-    ${@bb.utils.contains('IMAGE_FEATURES', 'enable-adbd', 'usermod -a -G ${ARDUINO-USER} adb;', '', d)} \
 "
 
 # Create home directory for arduino user and set permissions
 create_arduino_home() {
     mkdir -p ${IMAGE_ROOTFS}/home/${ARDUINO-USER}
     chown ${ARDUINO-UID}:${ARDUINO-GID} ${IMAGE_ROOTFS}/home/${ARDUINO-USER}
-    if ${@bb.utils.contains('IMAGE_FEATURES', 'enable-adbd', 'true', 'false', d)}; then
-        chmod 2775 ${IMAGE_ROOTFS}/home/${ARDUINO-USER}
-    fi
 }
 
 ROOTFS_POSTPROCESS_COMMAND += "create_arduino_home"
