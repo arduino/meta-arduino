@@ -26,6 +26,7 @@ there is no concurrent real response that could race with this.
 Fixes: c68cfb718c8f ("misc: fastrpc: Add support for context Invoke method")
 Cc: stable@kernel.org
 Signed-off-by: Anandu Krishnan E <anandu.e@oss.qualcomm.com>
+Upstream-Status: Submitted [https://ratatoskr.run/lkml/2026/11/17951181]
 ---
  drivers/misc/fastrpc.c | 7 +++++++
  1 file changed, 7 insertions(+)

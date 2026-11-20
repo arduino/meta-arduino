@@ -103,6 +103,7 @@ Cc: stable@kernel.org
 Co-developed-by: Srinivas Kandagatla <srinivas.kandagatla@oss.qualcomm.com>
 Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@oss.qualcomm.com>
 Signed-off-by: Anandu Krishnan E <anandu.e@oss.qualcomm.com>
+Upstream-Status: Submitted [https://ratatoskr.run/lkml/2026/11/17951182]
 ---
 [Rebase note, local, not part of the upstream patch: v4 3/3 was posted
 against base-commit 749a4de37040 and its 'struct fastrpc_channel_ctx' and

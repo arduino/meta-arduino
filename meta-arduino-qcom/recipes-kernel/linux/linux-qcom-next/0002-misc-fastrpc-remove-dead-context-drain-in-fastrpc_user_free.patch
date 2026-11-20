@@ -21,6 +21,7 @@ the time this callback can run. Remove it.
 
 Fixes: e85eb5feca8e2 ("misc: fastrpc: fix use-after-free of fastrpc_user in workqueue context")
 Signed-off-by: Anandu Krishnan E <anandu.e@oss.qualcomm.com>
+Upstream-Status: Submitted [https://ratatoskr.run/lkml/2026/11/17951180]
 ---
  drivers/misc/fastrpc.c | 6 ------
  1 file changed, 6 deletions(-)

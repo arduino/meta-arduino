@@ -33,12 +33,12 @@ clean up, so its dma_buf_detach()/dma_buf_put() must still run manually.
 
 Fixes: 334f1a1cbe03 ("misc: fastrpc: Use fastrpc_map_put in fastrpc_map_create on fail")
 Cc: stable@vger.kernel.org
-Assisted-by: Claude:claude-opus-4-8
 Signed-off-by: Yifei Gao <gyf161023@gmail.com>
 Reviewed-by: Ekansh Gupta <ekansh.gupta@oss.qualcomm.com>
 Signed-off-by: Srinivas Kandagatla <srini@kernel.org>
 Link: https://patch.msgid.link/20261002101220.1084101-2-srinivas.kandagatla@oss.qualcomm.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Upstream-Status: Backport [commit 09fa66ec1b4896ab841da085ca58b6433f28f07f]
 ---
  drivers/misc/fastrpc.c | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
