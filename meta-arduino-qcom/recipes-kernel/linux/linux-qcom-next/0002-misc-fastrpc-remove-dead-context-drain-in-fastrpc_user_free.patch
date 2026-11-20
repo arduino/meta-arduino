@@ -1,0 +1,52 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Anandu Krishnan E <anandu.e@oss.qualcomm.com>
+Date: Tue, 17 Nov 2026 09:39:58 +0000
+Subject: [PATCH v4 1/3] misc: fastrpc: remove dead context drain in fastrpc_user_free()
+
+fastrpc_context_alloc() takes a reference on fl via fastrpc_user_get()
+for the lifetime of every context, and fastrpc_context_free() always
+unlinks the context from fl->pending before releasing that reference
+with fastrpc_user_put(). This means fl->refcount cannot reach zero -
+and fastrpc_user_free() cannot run - while any context is still linked
+on fl->pending: whichever context's release happens to be the one that
+drops the last reference has, by construction, already removed itself
+from the list a few lines earlier in the very same call.
+
+The list_for_each_entry_safe() loop over fl->pending in
+fastrpc_user_free() can therefore never find anything to iterate. It
+has been unreachable since fl's own lifetime was switched from
+file-close-synchronous teardown to kref-counted teardown; it was never
+updated to reflect that the list it walks is now guaranteed empty by
+the time this callback can run. Remove it.
+
+Fixes: e85eb5feca8e2 ("misc: fastrpc: fix use-after-free of fastrpc_user in workqueue context")
+Signed-off-by: Anandu Krishnan E <anandu.e@oss.qualcomm.com>
+---
+ drivers/misc/fastrpc.c | 6 ------
+ 1 file changed, 6 deletions(-)
+
+diff --git a/drivers/misc/fastrpc.c b/drivers/misc/fastrpc.c
+index 9e760f68bc..bb0c304196 100644
+--- a/drivers/misc/fastrpc.c
++++ b/drivers/misc/fastrpc.c
+@@ -568,17 +568,11 @@ static void fastrpc_context_put(struct fastrpc_invoke_ctx *ctx);
+ static void fastrpc_user_free(struct kref *ref)
+ {
+ 	struct fastrpc_user *fl = container_of(ref, struct fastrpc_user, refcount);
+-	struct fastrpc_invoke_ctx *ctx, *n;
+ 	struct fastrpc_map *map, *m;
+ 	struct fastrpc_buf *buf, *b;
+ 
+ 	fastrpc_buf_free(fl->init_mem);
+ 
+-	list_for_each_entry_safe(ctx, n, &fl->pending, node) {
+-		list_del(&ctx->node);
+-		fastrpc_context_put(ctx);
+-	}
+-
+ 	list_for_each_entry_safe(map, m, &fl->maps, node)
+ 		fastrpc_map_put(map);
+ 
+
+-- 
+2.34.1
