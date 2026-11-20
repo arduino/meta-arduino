@@ -198,6 +198,10 @@ bind() {
         exit 1
     fi
 
+    if [ -d "${GADGET_PATH}/functions/ffs.adb" ]; then
+        systemctl start --no-block arduino-gadget-watch.service 2>/dev/null || true
+    fi
+
     if [ -n "$(cat "${GADGET_PATH}/UDC" 2>/dev/null)" ]; then
         echo "Gadget ${GADGET_NAME} already bound"
         return 0
@@ -226,8 +230,41 @@ unbind() {
     echo "" > "${GADGET_PATH}/UDC" 2>/dev/null || true
 }
 
+# Restart a single function without tearing down the rest of the gadget. Used
+# to recover the adb FunctionFS endpoint after a UDC rebind the kernel never
+# reports as a disconnect (qualcomm-linux/meta-qcom#3355): the composite
+# device still has to be unplugged/replugged at the UDC level, but the other
+# functions (ncm/acm) keep their configfs directories and symlinks untouched.
+restart_function() {
+    schema="$1"
+    [ -d "$GADGET_PATH" ] || { echo "Error: gadget ${GADGET_NAME} not found" >&2; exit 1; }
+
+    [ -n "$(cat "${GADGET_PATH}/UDC" 2>/dev/null)" ] && unbind
+
+    cd "$GADGET_PATH"
+    case "$schema" in
+        ffs)
+            is_mounted "$FFS_ADB_DIR" && umount "$FFS_ADB_DIR"
+            [ -L configs/c.1/ffs.adb ] && rm -f configs/c.1/ffs.adb
+            [ -d functions/ffs.adb ] && rmdir functions/ffs.adb
+            mkdir -p functions/ffs.adb
+            ln -s functions/ffs.adb configs/c.1
+            mount_ffs_adb
+            ;;
+        *)
+            echo "Error: restarting schema '${schema}' is not supported" >&2
+            exit 2
+            ;;
+    esac
+
+    bind
+    echo "Restarted ${schema} function on ${GADGET_NAME}"
+}
+
 stop() {
     [ -d "$GADGET_PATH" ] || return 0
+
+    systemctl stop --no-block arduino-gadget-watch.service 2>/dev/null || true
 
     echo "Removing Arduino USB gadget..."
     unbind
@@ -258,9 +295,15 @@ case "$1" in
     bind)    bind ;;
     unbind)  unbind ;;
     stop)    stop ;;
-    restart) stop; start; bind ;;
+    restart)
+        if [ -n "$2" ]; then
+            restart_function "$2"
+        else
+            stop; start; bind
+        fi
+        ;;
     *)
-        echo "Usage: $0 {start|bind|unbind|stop|restart}" >&2
+        echo "Usage: $0 {start|bind|unbind|stop|restart [schema]}" >&2
         exit 2
         ;;
 esac

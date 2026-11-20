@@ -1,0 +1,34 @@
+#!/bin/sh
+#
+# Watches the UDC bound to the Arduino gadget and recovers the adb
+# FunctionFS endpoint when the host disappears. A ConfigFS gadget has no
+# disconnect uevent, so adbd never notices and never reopens functionfs
+# (qualcomm-linux/meta-qcom#3355); this restarts just the ffs.adb function
+# once the UDC leaves the "configured" state.
+#
+# Usage: arduino-gadget-watch
+
+GADGET_NAME="${GADGET_NAME:-arduino}"
+GADGET_PATH="/sys/kernel/config/usb_gadget/${GADGET_NAME}"
+POLL_INTERVAL="${ANDROID_GADGET_WATCH_INTERVAL:-5}"
+
+last_state=""
+while :; do
+    sleep "$POLL_INTERVAL"
+
+    udc=$(cat "${GADGET_PATH}/UDC" 2>/dev/null) || continue
+    [ -n "$udc" ] || continue
+
+    state=$(cat "/sys/class/udc/${udc}/state" 2>/dev/null) || continue
+
+    if [ "$state" = "configured" ]; then
+        last_state="configured"
+        continue
+    fi
+
+    if [ "$last_state" = "configured" ]; then
+        echo "UDC ${udc} left 'configured' (now '${state}'), restarting the adb function"
+        /usr/bin/arduino-gadget-setup restart ffs || echo "adb function restart failed" >&2
+    fi
+    last_state="$state"
+done

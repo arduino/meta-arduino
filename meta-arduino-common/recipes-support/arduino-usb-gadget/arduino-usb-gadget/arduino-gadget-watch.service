@@ -1,0 +1,10 @@
+[Unit]
+Description=Arduino USB adb gadget recovery watcher
+Documentation=man:systemd.special(7)
+ConditionPathExists=/etc/usb-debugging-enabled
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/arduino-gadget-watch
+Restart=on-failure
+RestartSec=5
