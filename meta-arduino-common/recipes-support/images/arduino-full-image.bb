@@ -8,4 +8,5 @@ require recipes-support/images/arduino-container-image.bb
 # Arduino App CLI orchestrator
 CORE_IMAGE_EXTRA_INSTALL += " \
     arduino-app-cli \
+    arduino-app-assets \
 "

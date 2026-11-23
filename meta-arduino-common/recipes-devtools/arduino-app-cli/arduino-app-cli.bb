@@ -1,19 +1,13 @@
 SUMMARY = "Arduino App CLI command line tool"
 DESCRIPTION = "arduino-app-cli is a command line tool running on Arduino UNO Q boards that manages and runs Arduino Apps, provides a HTTP daemon mode to expose RestFul APIs, and auto-updates itself and other components."
-HOMEPAGE = "https://github.com/arduino/arduino-app-cli"
-LICENSE = "GPL-3.0-or-later"
-LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/GPL-3.0-or-later;md5=1c76c4cc354acaac30ed4d5eefea7245"
 
-PV = "0.11.1"
-
-SRC_URI = "git://github.com/arduino/arduino-app-cli.git;nobranch=1;protocol=https"
-SRCREV = "600152dac08ee7ebfe89c4d53a2a0a685bf83f2a"
-
+inherit arduino-app-cli-core
 inherit go
 
+# The native binary is used by arduino-app-assets to download the assets
 BBCLASSEXTEND = "native"
 
-GO_INSTALL = "${GO} build -trimpath -o arduino-app-cli ./cmd/arduino-app-cli/main.go"
+GO_INSTALL = "${GO} build -trimpath -tags immutableos -o arduino-app-cli ./cmd/arduino-app-cli/main.go"
 
 # This recipe has no vendor/ dir, so go build fetches missing modules from
 # GOPROXY live during do_compile; allow network access for that task since
