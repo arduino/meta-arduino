@@ -2,7 +2,11 @@ SUMMARY = "Arduino App CLI command line tool"
 DESCRIPTION = "arduino-app-cli is a command line tool running on Arduino UNO Q boards that manages and runs Arduino Apps, provides a HTTP daemon mode to expose RestFul APIs, and auto-updates itself and other components."
 
 inherit arduino-app-cli-core
-inherit go
+inherit go useradd
+
+# Group owning the arduino-app-cli data directory (see arduino-app-assets)
+USERADD_PACKAGES = "${PN}"
+GROUPADD_PARAM:${PN} = "--system arduino"
 
 # The native binary is used by arduino-app-assets to download the assets
 BBCLASSEXTEND = "native"

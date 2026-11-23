@@ -15,5 +15,4 @@ CORE_IMAGE_EXTRA_INSTALL += " \
 
 EXTRA_USERS_PARAMS += "\
     groupadd docker; \
-    usermod -a -G docker ${ARDUINO-USER}; \
 "

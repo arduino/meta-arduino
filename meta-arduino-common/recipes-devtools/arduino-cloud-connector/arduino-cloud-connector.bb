@@ -59,10 +59,11 @@ if [ -n "$D" ]; then
     exit 0
 fi
 
-# Match upstream package behavior: ensure data dir exists and is private.
-install -d /home/arduino/.local/share/arduino-cloud-connector
-chown -R arduino:arduino /home/arduino/.local/share/arduino-cloud-connector || true
-chmod -R 700 /home/arduino/.local/share/arduino-cloud-connector
+#TODO FIX ARDUINO GROUP: the arduino user no longer exists
+## Match upstream package behavior: ensure data dir exists and is private.
+#install -d /home/arduino/.local/share/arduino-cloud-connector
+#chown -R arduino:arduino /home/arduino/.local/share/arduino-cloud-connector || true
+#chmod -R 700 /home/arduino/.local/share/arduino-cloud-connector
 
 update-ca-certificates --fresh || true
 }

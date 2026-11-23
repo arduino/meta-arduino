@@ -4,14 +4,14 @@
 
 The image recipes live in `meta-arduino-common/recipes-support/images/` and are shared by all platforms.
 
-Every image applies `arduino-image.inc`, which adds the Arduino baseline: SSH server (dropbear), adbd, USB composite gadget, device tree and overlays, U-Boot scripts, first-boot rootfs expansion, bring-up package groups, `sudo` and the `arduino` user.
+Every image applies `arduino-image.inc`, which adds the Arduino baseline: SSH server (dropbear), adbd, USB composite gadget, device tree and overlays, U-Boot scripts, first-boot rootfs expansion, bring-up package groups, and `sudo`.
 
 | Image | Builds on | Adds |
 | --- | --- | --- |
 | `arduino-console-image` | `core-image` class (OE-Core) + `arduino-image.inc` | Nothing else: console-only system |
 | `arduino-weston-image` | `core-image-weston` (OE-Core) + `arduino-image.inc` | Weston (Wayland compositor) |
 | `arduino-multimedia-image` | `arduino-weston-image` | Audio (PipeWire, WirePlumber, ALSA), GStreamer, libcamera, V4L2, GPU/DRM utilities, TensorFlow Lite tools |
-| `arduino-container-image` | `arduino-multimedia-image` | Docker and Docker Compose; `arduino` user in the `docker` group |
+| `arduino-container-image` | `arduino-multimedia-image` | Docker and Docker Compose; `docker` group |
 | `arduino-full-image` | `arduino-container-image` | Arduino App CLI (`arduino-app-cli`) |
 
 ```mermaid
