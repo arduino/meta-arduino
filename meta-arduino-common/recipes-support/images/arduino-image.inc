@@ -54,13 +54,6 @@ CORE_IMAGE_EXTRA_INSTALL += " \
 inherit extrausers
 EXTRA_USERS_PARAMS = "usermod -p '' root;"
 
-#TODO FIX ARDUINO GROUP: the arduino group is now created by the arduino-app-cli recipe
-#ARDUINO-GID = "1001"
-#EXTRA_USERS_PARAMS += " \
-#    groupadd -g ${ARDUINO-GID} arduino; \
-#    ${@bb.utils.contains('IMAGE_FEATURES', 'enable-adbd', 'usermod -a -G arduino adb;', '', d)} \
-#"
-
 fakeroot add_custom_sudoers () {
     # Enable sudo group
     install -d -m 0755 ${IMAGE_ROOTFS}${sysconfdir}/sudoers.d

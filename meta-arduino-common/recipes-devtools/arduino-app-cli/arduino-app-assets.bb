@@ -8,7 +8,7 @@ inherit arduino-app-cli-core
 DEPENDS += "arduino-app-cli-native arduino-app-cli"
 RDEPENDS:${PN} += "arduino-app-cli"
 
-ARDUINO_DATA_DIR_FIX = "/var/lib/arduino-app-cli"
+ARDUINO_APP_CLI_DATA_DIR = "/var/lib/arduino-app-cli"
 
 ASSETS_DIR = "${WORKDIR}/assets"
 
@@ -32,15 +32,15 @@ do_compile[network] = "1"
 do_compile[cleandirs] = "${ASSETS_DIR}"
 
 do_install() {
-    install -d ${D}${ARDUINO_DATA_DIR_FIX}
-    cp -R --no-preserve=ownership ${ASSETS_DIR} ${D}${ARDUINO_DATA_DIR_FIX}/
+    install -d ${D}${ARDUINO_APP_CLI_DATA_DIR}
+    cp -R --no-preserve=ownership ${ASSETS_DIR} ${D}${ARDUINO_APP_CLI_DATA_DIR}/
 
     # 775 root:arduino with the setgid bit, so new files inherit the group
-    chown root:arduino ${D}${ARDUINO_DATA_DIR_FIX}
-    chmod 2775 ${D}${ARDUINO_DATA_DIR_FIX}
-    chown -R root:arduino ${D}${ARDUINO_DATA_DIR_FIX}/assets
-    find ${D}${ARDUINO_DATA_DIR_FIX}/assets -type d -exec chmod 2775 {} +
-    find ${D}${ARDUINO_DATA_DIR_FIX}/assets -type f -exec chmod u=rwX,g=rwX,o=rX {} +
+    chown root:arduino ${D}${ARDUINO_APP_CLI_DATA_DIR}
+    chmod 2775 ${D}${ARDUINO_APP_CLI_DATA_DIR}
+    chown -R root:arduino ${D}${ARDUINO_APP_CLI_DATA_DIR}/assets
+    find ${D}${ARDUINO_APP_CLI_DATA_DIR}/assets -type d -exec chmod 2775 {} +
+    find ${D}${ARDUINO_APP_CLI_DATA_DIR}/assets -type f -exec chmod u=rwX,g=rwX,o=rX {} +
 }
 
-FILES:${PN} += "${ARDUINO_DATA_DIR_FIX}"
+FILES:${PN} += "${ARDUINO_APP_CLI_DATA_DIR}"

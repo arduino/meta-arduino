@@ -13,8 +13,6 @@ CORE_IMAGE_EXTRA_INSTALL += " \
     docker-compose \
 "
 
-#TODO FIX ARDUINO GROUP:
-# usermod -a -G docker ${ARDUINO_USER}; \
 EXTRA_USERS_PARAMS += "\
     groupadd docker; \
 "
