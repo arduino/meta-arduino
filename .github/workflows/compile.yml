@@ -229,6 +229,23 @@ jobs:
             # Copy *.efi, *.efi and *.vfat as they are useful for debugging
             find $images_dir/ -maxdepth 1 -type f \( -name \*.efi -o -name \*.elf -o -name dtb-\*.vfat \) -exec cp -v {} $uploads_dir/ \;
           fi
+          # qualcomm-linux/meta-qcom-arduino's lava-test-plans action assumes
+          # the LAVA device-type name is also the Yocto MACHINE used in the
+          # qcomflash image's S3 path and filename. Ours differ (imola/monza
+          # vs uno-q/ventuno-q), so publish an additional symlink of the
+          # qcomflash tarball under the device-type name LAVA expects,
+          # alongside the real MACHINE-named upload, without touching it.
+          declare -A lava_device_alias=( [imola]=uno-q [monza]=ventuno-q )
+          ALIAS="${lava_device_alias[${INPUTS_MACHINE}]:-}"
+          if [ -n "$ALIAS" ]; then
+            tarball=$(compgen -G "$uploads_dir/*.qcomflash.tar.gz" | head -n1 || true)
+            if [ -n "$tarball" ]; then
+              alias_dir="./uploads/${INPUTS_DISTRO_NAME}${INPUTS_KERNEL_DIRNAME}/${ALIAS}"
+              mkdir -p "$alias_dir"
+              alias_name="$(basename "$tarball" | sed "s/${INPUTS_MACHINE}/${ALIAS}/")"
+              ln -sv "../${INPUTS_MACHINE}/$(basename "$tarball")" "$alias_dir/$alias_name"
+            fi
+          fi
           if compgen -G "buildstats*" > /dev/null; then
             cp -v buildstats* $uploads_dir/
           fi
@@ -276,6 +293,14 @@ jobs:
           FILENAME="build-url_${BUILDNAME}"
           echo "${UPLOAD_URL}" > "${FILENAME}"
           echo "filename=${FILENAME}" >> $GITHUB_OUTPUT
+
+          declare -A lava_device_alias=( [imola]=uno-q [monza]=ventuno-q )
+          ALIAS="${lava_device_alias[${INPUTS_MACHINE}]:-}"
+          if [ -n "$ALIAS" ]; then
+            ALIAS_FILENAME="build-url_${ALIAS}_${INPUTS_DISTRO_NAME}${KERNEL_DIRNAME}"
+            echo "${UPLOAD_URL}" > "${ALIAS_FILENAME}"
+            echo "alias_filename=${ALIAS_FILENAME}" >> $GITHUB_OUTPUT
+          fi
         env:
           INPUTS_KERNEL_DIRNAME: ${{ inputs.kernel_dirname }}
           INPUTS_MACHINE: ${{ inputs.machine }}
@@ -287,6 +312,14 @@ jobs:
           overwrite: true
           name: ${{ steps.print-output.outputs.filename }}
           path: ${{ steps.print-output.outputs.filename }}
+
+      - name: Upload build URL (LAVA device-type alias)
+        if: steps.print-output.outputs.alias_filename != ''
+        uses: actions/upload-artifact@v6
+        with:
+          overwrite: true
+          name: ${{ steps.print-output.outputs.alias_filename }}
+          path: ${{ steps.print-output.outputs.alias_filename }}
 
       - name: Archive BitBake task logs
         if: always()
