@@ -231,18 +231,22 @@ jobs:
           fi
           # qualcomm-linux/meta-qcom-arduino's lava-test-plans action assumes
           # the LAVA device-type name is also the Yocto MACHINE used in the
-          # qcomflash image's S3 path and filename. Ours differ (imola/monza
-          # vs uno-q/ventuno-q), so publish an additional symlink of the
-          # qcomflash tarball under the device-type name LAVA expects,
-          # alongside the real MACHINE-named upload, without touching it.
+          # qcomflash image's S3 path and filename, and (for qcom-distro)
+          # that the image is named qcom-multimedia-image-<machine> — the
+          # image their own CI builds. Ours differ on both counts
+          # (imola/monza vs uno-q/ventuno-q, and arduino-full-image instead
+          # of qcom-multimedia-image), so publish an additional symlink of
+          # our most feature-complete image (arduino-full-image) under the
+          # name and device alias LAVA expects, alongside the real
+          # MACHINE-named upload, without touching it.
           declare -A lava_device_alias=( [imola]=uno-q [monza]=ventuno-q )
           ALIAS="${lava_device_alias[${INPUTS_MACHINE}]:-}"
           if [ -n "$ALIAS" ]; then
-            tarball=$(compgen -G "$uploads_dir/*.qcomflash.tar.gz" | head -n1 || true)
-            if [ -n "$tarball" ]; then
+            tarball="$uploads_dir/arduino-full-image-${INPUTS_MACHINE}.rootfs.qcomflash.tar.gz"
+            if [ -e "$tarball" ]; then
               alias_dir="./uploads/${INPUTS_DISTRO_NAME}${INPUTS_KERNEL_DIRNAME}/${ALIAS}"
               mkdir -p "$alias_dir"
-              alias_name="$(basename "$tarball" | sed "s/${INPUTS_MACHINE}/${ALIAS}/")"
+              alias_name="qcom-multimedia-image-${ALIAS}.rootfs.qcomflash.tar.gz"
               ln -sv "../${INPUTS_MACHINE}/$(basename "$tarball")" "$alias_dir/$alias_name"
             fi
           fi
