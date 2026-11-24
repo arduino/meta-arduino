@@ -12,55 +12,23 @@ permissions:
   contents: read
 
 jobs:
-  # lava-test-plans looks for build-url_<device>_<distro> artifacts, where
-  # <device> is the LAVA device-type name (uno-q/ventuno-q). Our own compile
-  # matrix names them after the Yocto MACHINEOVERRIDES (imola/monza) instead, so
-  # re-upload them under the names LAVA expects before calling test-distro.yml.
-  rename-build-urls:
-    runs-on: ubuntu-latest
-    permissions:
-      actions: read
-    steps:
-      - name: Download build-url artifacts from the target build run
-        uses: actions/download-artifact@v7
-        with:
-          github-token: ${{ github.token }}
-          run-id: ${{ inputs.build_run_id }}
-          pattern: "build-url_*_qcom-distro"
-          path: build-urls
-
-      - name: Rename imola/monza artifacts to their uno-q/ventuno-q device names
-        run: |
-          declare -A alias=( [imola]=uno-q [monza]=ventuno-q )
-          for machine in "${!alias[@]}"; do
-            device="${alias[$machine]}"
-            src="build-urls/build-url_${machine}_qcom-distro/build-url_${machine}_qcom-distro"
-            mkdir -p "build-url_${device}_qcom-distro"
-            cp "$src" "build-url_${device}_qcom-distro/build-url_${device}_qcom-distro"
-          done
-
-      - uses: actions/upload-artifact@v6
-        with:
-          name: build-url_uno-q_qcom-distro
-          path: build-url_uno-q_qcom-distro/build-url_uno-q_qcom-distro
-
-      - uses: actions/upload-artifact@v6
-        with:
-          name: build-url_ventuno-q_qcom-distro
-          path: build-url_ventuno-q_qcom-distro/build-url_ventuno-q_qcom-distro
-
   test-qcom-distro:
-    needs: rename-build-urls
     permissions:
       contents: read
       actions: read
       checks: write
       pull-requests: write
+    # Pinned to the same meta-qcom-arduino commit as meta-arduino-qcom/ci/*.lock.yml,
+    # so the test plan matches the layer revision the image was built from.
     uses: qualcomm-linux/meta-qcom-arduino/.github/workflows/test-distro.yml@88865373932d9f7178917017b4c513f2194381ed
     secrets:
       LAVATOKEN: ${{ secrets.LAVATOKEN }}
     with:
-      build_id: ${{ github.run_id }}
+      # test-distro.yml's lava-test-plans action downloads build-url_<device>_<distro>
+      # artifacts straight from this run id (actions/download-artifact supports
+      # cross-run lookups given actions:read), so this has to name the build
+      # run, not this workflow's own run.
+      build_id: ${{ inputs.build_run_id }}
       # Boot-only for now: leaving devices_premerge unset skips the pre-merge
       # suite entirely
       devices: "uno-q,ventuno-q"
