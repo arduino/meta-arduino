@@ -4,7 +4,7 @@
 
 The image recipes live in `meta-arduino-common/recipes-support/images/` and are shared by all platforms.
 
-Every image applies `arduino-image.inc`, which adds the Arduino baseline: SSH server (dropbear), adbd, USB composite gadget, device tree and overlays, U-Boot scripts, first-boot rootfs expansion, bring-up package groups, and `sudo`.
+Every image applies `arduino-image.inc`, which adds the Arduino baseline: SSH server (dropbear), adbd, USB composite gadget, device tree and overlays, U-Boot scripts, first-boot rootfs expansion, bring-up package groups, `sudo` and the `arduino` user (UID assigned by the system, with home directory).
 
 | Image | Builds on | Adds |
 | --- | --- | --- |
