@@ -42,7 +42,9 @@ do_install() {
     install -m 0755 ${S}/arduino-app-cli ${D}${bindir}/arduino-app-cli
 }
 
-RDEPENDS:${PN} += " \
+# Runtime deps only apply to the target build: the native variant has no
+# arduino-router-native/arduino-cli-native counterparts.
+RDEPENDS:${PN}:append:class-target = " \
     arduino-router \
     arduino-cli \
     openocd \
