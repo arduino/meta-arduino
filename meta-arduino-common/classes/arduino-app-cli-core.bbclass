@@ -9,4 +9,4 @@ LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/GPL-3.0-or-later;md5=1c76c4cc35
 PV = "0.14.1"
 
 SRC_URI = "git://github.com/arduino/arduino-app-cli.git;nobranch=1;protocol=https"
-SRCREV = "01fd54a3ae64dea285cc87729e392a8d2d5dcbfa"
+SRCREV = "df97be21f39f77a15deab1d0f0902a71a0b9d28f"

@@ -11,6 +11,9 @@ RDEPENDS:${PN} += "arduino-app-cli"
 ARDUINO_APP_CLI_DATA_DIR = "/var/lib/arduino-app-cli"
 
 ASSETS_DIR = "${WORKDIR}/assets"
+# download-examples creates an examples/ folder inside its destination
+EXAMPLES_DEST = "${WORKDIR}/examples-download"
+EXAMPLES_DIR = "${EXAMPLES_DEST}/examples"
 
 do_configure[noexec] = "1"
 
@@ -27,13 +30,15 @@ do_compile() {
     install -d ${HOME}
 
     ${STAGING_BINDIR_NATIVE}/arduino-app-cli system download-runner-assets --dest ${ASSETS_DIR}
+    ${STAGING_BINDIR_NATIVE}/arduino-app-cli system download-examples --dest ${EXAMPLES_DEST}
 }
 do_compile[network] = "1"
-do_compile[cleandirs] = "${ASSETS_DIR}"
+do_compile[cleandirs] = "${ASSETS_DIR} ${EXAMPLES_DEST}"
 
 do_install() {
     install -d ${D}${ARDUINO_APP_CLI_DATA_DIR}
     cp -R --no-preserve=ownership ${ASSETS_DIR} ${D}${ARDUINO_APP_CLI_DATA_DIR}/
+    cp -R --no-preserve=ownership ${EXAMPLES_DIR} ${D}${ARDUINO_APP_CLI_DATA_DIR}/
 
     # 775 root:arduino with the setgid bit, so new files inherit the group
     chown root:arduino ${D}${ARDUINO_APP_CLI_DATA_DIR}
@@ -41,6 +46,10 @@ do_install() {
     chown -R root:arduino ${D}${ARDUINO_APP_CLI_DATA_DIR}/assets
     find ${D}${ARDUINO_APP_CLI_DATA_DIR}/assets -type d -exec chmod 2775 {} +
     find ${D}${ARDUINO_APP_CLI_DATA_DIR}/assets -type f -exec chmod u=rwX,g=rwX,o=rX {} +
+
+    chown -R root:arduino ${D}${ARDUINO_APP_CLI_DATA_DIR}/examples
+    find ${D}${ARDUINO_APP_CLI_DATA_DIR}/examples -type d -exec chmod 2775 {} +
+    find ${D}${ARDUINO_APP_CLI_DATA_DIR}/examples -type f -exec chmod u=rwX,g=rwX,o=rX {} +
 }
 
 FILES:${PN} += "${ARDUINO_APP_CLI_DATA_DIR}"
