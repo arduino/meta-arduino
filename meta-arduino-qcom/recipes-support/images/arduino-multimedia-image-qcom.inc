@@ -32,7 +32,7 @@ CORE_IMAGE_EXTRA_INSTALL:append:aarch64 = " \
     gst-plugins-imsdk-python \
 "
 
-CORE_IMAGE_EXTRA_INSTALL:append:monza = " libqcnpuperf libqcnpuperf-cli"
+CORE_IMAGE_EXTRA_INSTALL:append:monza = " libqcnpuperf libqcnpuperf-cli libqcnpuperf-smi"
 
 CORE_IMAGE_EXTRA_INSTALL:append = " fastrpc-tests"
 
