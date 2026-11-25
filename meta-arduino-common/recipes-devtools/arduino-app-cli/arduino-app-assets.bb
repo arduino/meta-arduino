@@ -12,6 +12,7 @@ ARDUINO_APP_CLI_DATA_DIR = "/var/lib/arduino-app-cli"
 
 ASSETS_DIR = "${WORKDIR}/assets"
 # download-examples creates an examples/ folder inside its destination
+# TODO Move in a dedicated recipe
 EXAMPLES_DEST = "${WORKDIR}/examples-download"
 EXAMPLES_DIR = "${EXAMPLES_DEST}/examples"
 
