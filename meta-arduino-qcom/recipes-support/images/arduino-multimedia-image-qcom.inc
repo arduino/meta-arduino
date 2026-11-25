@@ -35,4 +35,10 @@ CORE_IMAGE_EXTRA_INSTALL:append:monza = " libqcnpuperf libqcnpuperf-cli libqcnpu
 
 CORE_IMAGE_EXTRA_INSTALL:append = " fastrpc-tests"
 
+# Access to the FastRPC device nodes for the arduino user
+EXTRA_USERS_PARAMS += " \
+    groupadd -r -f fastrpc; \
+    usermod -aG fastrpc arduino; \
+"
+
 REQUIRED_DISTRO_FEATURES += "wayland"

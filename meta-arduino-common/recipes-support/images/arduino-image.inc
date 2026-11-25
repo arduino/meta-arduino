@@ -57,11 +57,10 @@ EXTRA_USERS_PARAMS = "usermod -p '' root;"
 # Create the arduino system user (UID/GID assigned by the system, not fixed)
 # with its home directory. The arduino group is also created by arduino-app-cli
 # when installed, hence groupadd -f (no error if it exists).
-# -K UID_MIN=1001 is for testing purposes: it makes the system assign a UID
-# above 1000.
 EXTRA_USERS_PARAMS += " \
     groupadd -f arduino; \
-    useradd -m -K UID_MIN=1001 -g arduino -p '' -G audio,sudo,users,plugdev -d /home/arduino -s /bin/bash arduino; \
+    useradd -m -g arduino -p '' -G audio,sudo,users,plugdev -d /home/arduino -s /bin/bash arduino; \
+    usermod -aG adm,dialout,video,render,input arduino; \
 "
 
 fakeroot add_custom_sudoers () {
