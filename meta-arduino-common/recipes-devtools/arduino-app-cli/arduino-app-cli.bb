@@ -2,7 +2,23 @@ SUMMARY = "Arduino App CLI command line tool"
 DESCRIPTION = "arduino-app-cli is a command line tool running on Arduino UNO Q boards that manages and runs Arduino Apps, provides a HTTP daemon mode to expose RestFul APIs, and auto-updates itself and other components."
 
 inherit arduino-app-cli-core
-inherit go useradd
+inherit go useradd systemd
+
+FILESEXTRAPATHS:prepend := "${THISDIR}:"
+SRC_URI += "file://arduino-app-cli.service"
+
+# Separate package for the systemd service, so the daemon can be pulled in
+# (or left out) independently of the arduino-app-cli binary/library package.
+PACKAGES =+ "${PN}-daemon"
+
+SUMMARY:${PN}-daemon = "Arduino App CLI daemon systemd service"
+RDEPENDS:${PN}-daemon = "${PN}"
+
+SYSTEMD_PACKAGES = "${PN}-daemon"
+SYSTEMD_SERVICE:${PN}-daemon = "arduino-app-cli.service"
+SYSTEMD_AUTO_ENABLE:${PN}-daemon = "enable"
+
+FILES:${PN}-daemon += "${systemd_system_unitdir}/arduino-app-cli.service"
 
 # Group owning the arduino-app-cli data directory (see arduino-app-assets)
 USERADD_PACKAGES = "${PN}"
@@ -40,6 +56,11 @@ go_do_compile() {
 do_install() {
     install -d ${D}${bindir}
     install -m 0755 ${S}/arduino-app-cli ${D}${bindir}/arduino-app-cli
+}
+
+do_install:append:class-target() {
+    install -d ${D}${systemd_system_unitdir}
+    install -m 0644 ${UNPACKDIR}/arduino-app-cli.service ${D}${systemd_system_unitdir}/
 }
 
 # Runtime deps only apply to the target build: the native variant has no
