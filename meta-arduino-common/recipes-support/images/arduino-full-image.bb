@@ -7,7 +7,7 @@ require recipes-support/images/arduino-container-image.bb
 
 # Arduino App CLI orchestrator (arduino-app-cli-daemon pulls in arduino-app-cli)
 CORE_IMAGE_EXTRA_INSTALL += " \
-    arduino-app-cli \
     arduino-app-cli-daemon \
-    arduino-app-assets \
+    arduino-app-cli-assets \
+    arduino-app-cli-examples \
 "

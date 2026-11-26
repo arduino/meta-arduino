@@ -1,6 +1,6 @@
 # Common source definition for the recipes built from the arduino-app-cli
-# repository (arduino-app-cli and arduino-app-assets), so that both always
-# use the same version.
+# repository, so that both the target and native variants always use the
+# same version.
 
 HOMEPAGE = "https://github.com/arduino/arduino-app-cli"
 LICENSE = "GPL-3.0-or-later"
